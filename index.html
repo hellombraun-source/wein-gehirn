@@ -224,6 +224,81 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
 .fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:40px}
 .fallback .ic{font-size:50px;filter:grayscale(.3)}
 .fallback p{color:var(--mu);max-width:40ch;line-height:1.6}
+
+/* SEARCH */
+#searchBtn{position:fixed;top:24px;right:28px;z-index:45;width:44px;height:44px;border-radius:50%;background:rgba(14,11,9,.7);backdrop-filter:blur(14px);border:1px solid var(--line);color:var(--g);font-size:21px;cursor:pointer;transition:all .4s;display:flex;align-items:center;justify-content:center}
+#searchBtn:hover{border-color:var(--g);color:var(--g-lite);transform:scale(1.06)}
+#search{position:fixed;inset:0;z-index:85;display:flex;justify-content:center;align-items:flex-start;padding:13vh 20px 20px;opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility .4s}
+#search.open{opacity:1;visibility:visible}
+#search .scrim{position:absolute;inset:0;background:rgba(5,4,3,.85);backdrop-filter:blur(10px)}
+#search .sbox{position:relative;z-index:2;width:100%;max-width:680px;background:rgba(14,11,9,.97);border:1px solid var(--line);transform:translateY(-16px);transition:transform .5s var(--ease);max-height:74vh;display:flex;flex-direction:column}
+#search.open .sbox{transform:none}
+.shead{display:flex;align-items:center;gap:14px;padding:17px 22px;border-bottom:1px solid var(--line2)}
+.shead .sic{color:var(--g);font-size:22px}
+#sinput{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:var(--serif);font-size:24px;font-weight:300}
+#sinput::placeholder{color:var(--mu2)}
+.sx{background:none;border:1px solid var(--line2);color:var(--mu2);font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:6px 9px;cursor:pointer;text-transform:uppercase}
+.sx:hover{border-color:var(--g);color:var(--g)}
+.shint{padding:20px 22px;color:var(--mu2);font-size:13.5px;line-height:1.5;font-family:var(--serif);font-style:italic}
+.sresults{overflow-y:auto;padding:0 0 8px}
+.scount{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--mu2);padding:12px 22px 4px}
+.snone{padding:24px 22px;color:var(--mu);font-style:italic;font-family:var(--serif);font-size:16px;line-height:1.5}
+.sitem{display:grid;grid-template-columns:42px 1fr auto;gap:14px;align-items:center;padding:13px 22px;cursor:pointer;border-top:1px solid var(--line2);transition:background .3s}
+.sitem:hover{background:var(--panel)}
+.syr{font-family:var(--mono);font-size:11px;color:var(--mu2)}
+.sn b{font-weight:500;font-size:15px}.sn small{display:block;color:var(--mu2);font-size:12.5px;margin-top:1px}
+.stags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.stags span{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--g);border:1px solid var(--line2);padding:2px 6px}
+
+/* LAGEN · 3D */
+#v-lagen{padding:0;overflow:hidden}
+#terrain{position:absolute;inset:0;touch-action:none}
+.lagen-ui{position:absolute;inset:0;pointer-events:none;z-index:5}
+.lagen-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px;pointer-events:auto;max-width:460px}
+.lagen-chips button,.lagen-controls button{background:rgba(14,11,9,.55);border:1px solid var(--line);color:var(--mu);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:9px 12px;cursor:pointer;transition:all .4s;backdrop-filter:blur(8px)}
+.lagen-chips button.on{background:var(--g);color:#15110c;border-color:var(--g)}
+.lagen-chips button:hover{border-color:var(--g);color:var(--g)}.lagen-chips button.on:hover{color:#15110c}
+.lagen-controls{display:flex;gap:8px;margin-top:14px;pointer-events:auto}
+.lagen-controls button.on{background:var(--teal);color:#08110f;border-color:var(--teal)}
+.lagen-info{position:absolute;bottom:120px;right:clamp(20px,5vw,64px);width:min(290px,82vw);background:rgba(12,10,8,.78);backdrop-filter:blur(16px);border:1px solid var(--line);padding:22px;pointer-events:none}
+.lagen-info .nm{font-family:var(--serif);font-style:italic;font-size:27px;font-weight:300;line-height:1}
+.lagen-info .kv{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;margin-top:14px}
+.lagen-info .kv .k{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--mu2);padding-top:3px}
+.lagen-info .kv .v{font-size:13px;color:var(--ink)}
+.lagen-tip{position:fixed;pointer-events:none;z-index:70;transform:translate(-50%,-150%);background:rgba(12,10,8,.94);border:1px solid var(--line);padding:6px 10px;font-family:var(--mono);font-size:10px;color:var(--g-lite);white-space:nowrap;opacity:0;transition:opacity .15s}
+
+/* MOBILE / iPhone */
+@media(max-width:760px){
+  .brand{top:16px;left:16px}.brand b{font-size:18px}.brand span{display:none}
+  #searchBtn{top:14px;right:14px;width:40px;height:40px;font-size:18px}
+  .view{padding:70px 0 92px}
+  #v-home .hero{min-height:auto;padding-top:8px}
+  h1.big{font-size:clamp(32px,8.5vw,50px)}
+  .lead{font-size:16px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{padding:18px 14px}.stat .n{font-size:34px}
+  .globe-head,.lagen-head{top:62px;left:16px;right:16px;max-width:none}
+  .globe-head .sec,.lagen-head .sec{font-size:25px}
+  .globe-head .lead,.lagen-lead{display:none}
+  .globe-toggle{top:auto;bottom:70px;left:16px;right:16px;justify-content:stretch}
+  .globe-toggle button{flex:1;padding:11px 4px;font-size:9px;letter-spacing:.1em}
+  .globe-legend{display:none}
+  .lagen-chips{max-width:none}
+  .lagen-info{bottom:74px;right:16px;left:16px;width:auto;padding:16px}
+  .lagen-info .nm{font-size:22px}.lagen-info .kv{gap:5px 12px}
+  nav{padding:5px 5px calc(5px + env(safe-area-inset-bottom))}
+  .feat{padding:24px;gap:18px}.feat .ava{width:84px;height:84px;font-size:38px;margin:0 auto}
+  .feat .meta b{font-size:30px}
+  #modal{padding:0;align-items:flex-end}
+  #modal .box{max-height:92vh;grid-template-columns:1fr;border-left:none;border-right:none;border-bottom:none}
+  #modal .lbl{max-height:170px;border-right:none;border-bottom:1px solid var(--line2)}
+  #modal .body{padding:24px 22px}
+  #search{padding:7vh 12px 12px}
+  #sinput{font-size:19px}
+  .card{padding:20px}
+  .bar{grid-template-columns:84px 1fr 54px;gap:9px}
+  .bar .nm{font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -274,6 +349,23 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
     <div class="panel" id="gpanel">
       <button class="x" onclick="closePanel()">✕</button>
       <div id="gpanel-body"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-lagen">
+    <div id="terrain"></div>
+    <div class="lagen-ui">
+      <div class="globe-head lagen-head">
+        <div class="eyebrow">Topografie der Lagen</div>
+        <h2 class="sec" style="margin-top:.15em">Die <em>Schichten</em><br>deiner Weinberge.</h2>
+        <p class="lead lagen-lead" style="font-size:15px;margin-top:10px">Ein 3D-Reliefmodell der großen Lagen — Höhenlinien, Hangneigung, Terrassen. Ziehen zum Drehen. Jede goldene Kuppe ist eine deiner Flaschen, auf ihrer Höhe platziert.</p>
+        <div class="lagen-chips" id="lagen-chips"></div>
+        <div class="lagen-controls">
+          <button id="btn-explode" onclick="toggleExplode(this)">Schichten ⤢</button>
+          <button id="btn-spin" class="on" onclick="toggleSpin(this)">Rotation ⟳</button>
+        </div>
+      </div>
+      <div class="lagen-info" id="lagen-info"></div>
     </div>
   </section>
 
@@ -333,6 +425,18 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
   </section>
 </div>
 
+<button id="searchBtn" onclick="openSearch()" aria-label="Suche">⌕</button>
+<div id="search"><div class="scrim" onclick="closeSearch()"></div>
+  <div class="sbox">
+    <div class="shead"><span class="sic">⌕</span>
+      <input id="sinput" type="text" autocomplete="off" placeholder="Wein, Ort, Anlass, Region, Mensch …" oninput="runSearch(this.value)">
+      <button class="sx" onclick="closeSearch()">esc</button>
+    </div>
+    <div class="shint" id="shint">Tippe einen Weinnamen, ein Weingut, eine Region, einen Ort (z. B. „Ibiza"), einen Anlass (z. B. „Geburtstag") oder einen Menschen.</div>
+    <div class="sresults" id="sresults"></div>
+  </div>
+</div>
+
 <div id="modal"><div class="scrim" onclick="closeModal()"></div>
   <div class="box"><button class="x" onclick="closeModal()">✕</button>
     <div class="lbl" id="m-lbl"></div><div class="body" id="m-body"></div></div>
@@ -342,6 +446,7 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
 
 <script src="data.js"></script>
 <script src="https://unpkg.com/globe.gl@2" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/three@0.149.0/build/three.min.js" crossorigin="anonymous"></script>
 <script>
 const D = window.WINE_DATA, S = D.stats;
 const byId = {}; D.wines.forEach(w=>byId[w.id]=w);
@@ -355,7 +460,7 @@ window.addEventListener('load',()=>{
 });
 
 const VIEWS=[
-  ['home','◈','Übersicht'],['globe','✦','Welt'],['time','❧','Reise'],
+  ['home','◈','Übersicht'],['globe','✦','Welt'],['lagen','◭','Lagen'],['time','❧','Reise'],
   ['taste','◉','Geschmack'],['people','⚭','Menschen'],['reco','✷','Empfehlungen']
 ];
 const nav=$('#nav');
@@ -372,6 +477,7 @@ function go(id){
   $$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===id));
   const v=$('#v-'+id);v.scrollTop=0;revealScan(v);
   if(id==='globe'){initGlobe();setTimeout(sizeGlobe,80);}
+  if(id==='lagen'){initLagen();setTimeout(sizeLagen,80);}
   if(id==='taste')setTimeout(animCharts,260);
 }
 function revealScan(root){
@@ -410,6 +516,32 @@ window.HLF=HLS.map(h=>h[3]);
 
 /* GLOBE */
 let world=null,curLayer='origin',globeReady=false;
+function subsolar(){
+  const now=new Date();
+  const utcH=now.getUTCHours()+now.getUTCMinutes()/60;
+  const lng=((((12-utcH)*15)+540)%360)-180;
+  const start=Date.UTC(now.getUTCFullYear(),0,0);
+  const day=(now-start)/864e5;
+  const dec=-23.44*Math.cos((2*Math.PI/365.24)*(day+10));
+  return {lat:dec,lng};
+}
+function sunPoint(){
+  const s=subsolar();
+  return {lat:s.lat,lng:s.lng,alt:.12,rad:1.3,col:'#FFF6DE',_type:'sun',
+    _tip:tip('☀ Sonnenstand','Hier ist gerade Sonnen-Mittag — das Gradnetz zeigt die Zeitzonen-Meridiane (15° = 1 Stunde)')};
+}
+function loadBorders(){
+  const mine=new Set(D.stats.byCountry.map(c=>c.country));
+  const isMine=n=>mine.has(n)||(n==='United States of America'&&mine.has('United States'));
+  fetch('https://unpkg.com/three-globe/example/datasets/ne_110m_admin_0_countries.geojson')
+    .then(r=>r.json()).then(geo=>{
+      world.polygonsData(geo.features.filter(f=>f.properties.ISO_A2!=='AQ'))
+        .polygonCapColor(f=>isMine(f.properties.ADMIN||f.properties.NAME)?'rgba(196,168,130,.20)':'rgba(245,242,236,.015)')
+        .polygonSideColor(()=> 'rgba(139,110,58,.10)')
+        .polygonStrokeColor(f=>isMine(f.properties.ADMIN||f.properties.NAME)?'rgba(232,213,176,.6)':'rgba(196,168,130,.18)')
+        .polygonAltitude(0.006);
+    }).catch(()=>{});
+}
 function regionAgg(){
   const m={};
   D.wines.forEach(w=>{if(w.lat==null||!w.region)return;const k=w.country+'|'+w.region;
@@ -432,18 +564,19 @@ function initGlobe(){
     return;
   }
   world=Globe()(document.getElementById('globe'))
-    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
     .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
     .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
-    .showAtmosphere(true).atmosphereColor('#C4A882').atmosphereAltitude(.17)
+    .showGraticules(true)
+    .showAtmosphere(true).atmosphereColor('#bcd0e6').atmosphereAltitude(.25)
     .pointAltitude('alt').pointRadius('rad').pointColor('col')
     .pointLabel(d=>d._tip).onPointClick(onPoint)
-    .arcColor('arcCol').arcAltitudeAutoScale(.45).arcStroke(.32)
+    .arcColor('arcCol').arcAltitudeAutoScale(.45).arcStroke(.34)
     .arcDashLength(.5).arcDashGap(.4).arcDashAnimateTime(3500)
     .ringColor(()=>t=>`rgba(232,213,176,${1-t})`).ringMaxRadius('rMax').ringPropagationSpeed(1.4).ringRepeatPeriod('rPer');
   world.controls().autoRotate=true;world.controls().autoRotateSpeed=.38;world.controls().enableDamping=true;
   world.pointOfView({lat:44,lng:9,altitude:2.3},0);
-  renderLayer();
+  loadBorders();renderLayer();
 }
 function sizeGlobe(){if(world){const e=$('#globe');world.width(e.clientWidth).height(e.clientHeight);}}
 window.addEventListener('resize',()=>{if(cur==='globe')sizeGlobe();});
@@ -473,11 +606,13 @@ function renderLayer(){
     rings=R.map(r=>({lat:r.lat,lng:r.lon,rMax:2.8,rPer:900}));
     legend=`<div class="row"><span class="sw" style="background:#F0E0C2"></span>Ikone</div><div class="row"><span class="sw" style="background:#7a9b95"></span>Entdeckung</div><div class="row"><span class="sw" style="background:#C4A882"></span>Preis-Leistung</div>`;
   }
+  const sp=sunPoint();pts=pts.concat([sp]);rings=rings.concat([{lat:sp.lat,lng:sp.lng,rMax:7,rPer:2600}]);
   world.pointsData(pts).arcsData(arcs).ringsData(rings);
-  $('#glegend').innerHTML=legend;
+  $('#glegend').innerHTML=legend+'<div class="row" style="margin-top:7px"><span class="sw" style="background:#FFF6DE"></span>☀ Sonnenstand · Zeitzonen-Gitter</div>';
 }
 function tip(t,s){return `<div style="background:rgba(12,10,8,.92);border:1px solid rgba(196,168,130,.3);padding:9px 13px;font-family:'DM Mono',monospace;font-size:11px;color:#F5F2EC;backdrop-filter:blur(8px)"><b style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;font-weight:400;display:block;margin-bottom:3px">${esc(t)}</b><span style="color:rgba(245,242,236,.6);letter-spacing:.08em">${esc(s)}</span></div>`;}
 function onPoint(d){
+  if(d._type==='sun')return;
   if(world){world.controls().autoRotate=false;world.pointOfView({lat:d.lat,lng:d.lng,altitude:1.5},900);}
   if(d._type==='reco'){go('reco');return;}
   const ids=d.ids||[];const ws=ids.map(i=>byId[i]).filter(Boolean).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
@@ -617,7 +752,165 @@ function openModal(id){
   $('#modal').classList.add('open');
 }
 function closeModal(){$('#modal').classList.remove('open');}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closePanel();}});
+
+/* ===================== SUCHE ===================== */
+let SI=null;
+const OCC=[
+  [/geburtstag|zum geb|geb\.|geb von|geb-|geburtstagsgeschenk/i,'Geburtstag'],
+  [/weihnacht/i,'Weihnachten'],[/silvester|31\.12|neujahr/i,'Silvester'],
+  [/geschenk|bekommen|von .* (bekommen|geschenkt)|mitgebracht/i,'Geschenk'],
+  [/hochzeit/i,'Hochzeit'],[/ibiza|urlaub|wandern|reise|sofie hütte|gröden/i,'Reise'],
+  [/jahrgangswein/i,'Jahrgangswein']
+];
+function buildIndex(){
+  SI=D.wines.map(w=>{
+    const t=((w.note||'')+' '+(w.review||''));const occ=[];
+    OCC.forEach(([rx,lab])=>{if(rx.test(t))occ.push(lab);});
+    const hay=[w.winery,w.name,w.region,w.countryDe,w.style,w.type,w.note,w.review,
+      (w.venue&&w.venue.name),(w.venue&&w.venue.city),(w.people||[]).join(' '),occ.join(' '),w.vintage]
+      .filter(Boolean).join(' ').toLowerCase();
+    return {w,hay,occ};
+  });
+}
+function openSearch(){if(!SI)buildIndex();$('#search').classList.add('open');setTimeout(()=>$('#sinput').focus(),80);}
+function closeSearch(){$('#search').classList.remove('open');$('#sinput').value='';$('#sresults').innerHTML='';$('#shint').style.display='block';}
+function runSearch(q){
+  q=(q||'').trim().toLowerCase();const res=$('#sresults');
+  if(q.length<2){res.innerHTML='';$('#shint').style.display='block';return;}
+  $('#shint').style.display='none';
+  const terms=q.split(/\s+/);
+  const hits=SI.map(e=>{
+    if(!terms.every(t=>e.hay.includes(t)))return null;
+    let sc=e.w.rating||0;
+    terms.forEach(t=>{const w=e.w;
+      if((w.name||'').toLowerCase().includes(t)||(w.winery||'').toLowerCase().includes(t))sc+=6;
+      else if((w.region||'').toLowerCase().includes(t)||(w.countryDe||'').toLowerCase().includes(t))sc+=4;
+      else if(e.occ.join(' ').toLowerCase().includes(t)||(w.venue&&(w.venue.name||'').toLowerCase().includes(t)))sc+=3;
+      else sc+=1;});
+    return {e,sc};
+  }).filter(Boolean).sort((a,b)=>b.sc-a.sc).slice(0,40);
+  if(!hits.length){res.innerHTML='<div class="snone">Nichts gefunden für „'+esc(q)+'". Versuch z. B. einen Ort („Ibiza"), eine Rebsorte, eine Region oder einen Anlass („Geburtstag").</div>';return;}
+  res.innerHTML=`<div class="scount">${hits.length} Treffer</div>`+hits.map(({e})=>{
+    const w=e.w;const tags=[w.region&&esc(w.region),...e.occ.map(esc),...(w.people||[]).map(esc),(w.venue&&w.venue.name)&&esc(w.venue.name)].filter(Boolean).slice(0,4);
+    return `<div class="sitem" onclick="closeSearch();openModal('${w.id}')">
+      <div class="syr">${w.vintage||'—'}</div>
+      <div class="sn"><b>${esc(w.winery||w.name)}</b><small>${esc(w.name)} · ${esc(w.countryDe||'')}</small>
+        <div class="stags">${tags.map(t=>`<span>${t}</span>`).join('')}</div></div>
+      <div class="stars">${w.rating?stars(w.rating):''}</div></div>`;
+  }).join('');
+}
+
+/* ===================== LAGEN · 3D TOPOGRAFIE ===================== */
+const LAGEN=[
+ {key:'Südtirol - Alto Adige',label:'Südtirol',profile:'terrace',col:0x6FA68F,alt:'200–1000 m',soil:'Porphyr · Dolomit · Moräne',expo:'Steile S/SW-Hänge',grape:'Lagrein · Vernatsch · Pinot'},
+ {key:'Barolo',label:'Barolo · Langhe',profile:'hills',col:0xC4A882,alt:'200–540 m',soil:'Tortonischer Mergel',expo:'Sorì — Südhänge',grape:'Nebbiolo'},
+ {key:'Etna',label:'Etna',profile:'volcano',col:0xB0414F,alt:'400–1000 m',soil:'Vulkanasche · Lava',expo:'Contrade rund um den Vulkan',grape:'Nerello Mascalese'},
+ {key:'Mosel',label:'Mosel',profile:'cliff',col:0x7a9b95,alt:'100–350 m',soil:'Devon-Schiefer',expo:'Extrem-Steillage bis 60°',grape:'Riesling'},
+ {key:'Bolgheri',label:'Bolgheri',profile:'coast',col:0xD98C8C,alt:'0–150 m',soil:'Schwemmland · Kies',expo:'Sanfte Küstenhügel',grape:'Cabernet · Merlot'},
+ {key:'Douro',label:'Douro',profile:'terrace',col:0xE8D5B0,alt:'100–600 m',soil:'Schiefer (Xisto)',expo:'Terrassen am Fluss',grape:'Touriga Nacional'},
+ {key:'Rioja',label:'Rioja',profile:'hills',col:0xA8854E,alt:'300–700 m',soil:'Kalk-Lehm · Ton',expo:'Hochebene',grape:'Tempranillo'}
+];
+let T={ready:false,GN:72,SIZE:200,AMP:58,spin:true,explode:0,explodeT:0,rotX:-0.5,rotY:0.35,drag:false,px:0,py:0,contours:[],markers:[],cur:null};
+function heightFn(profile){
+  const noise=(u,v)=>0.5+0.28*Math.sin(u*23.1+v*17.7)+0.16*Math.sin(u*51-v*40)+0.09*Math.sin(u*9+v*80);
+  return (u,v)=>{let h;
+    if(profile==='volcano'){const dx=u-.5,dy=v-.5,d=Math.sqrt(dx*dx+dy*dy);h=Math.max(0,1-d*1.75);h=Math.pow(h,1.1);if(d<.06)h-=.18;h=h*.92+.05;h+=(noise(u,v)-.5)*.10;}
+    else if(profile==='cliff'){h=Math.pow(v,1.7);if(v<.12)h=.04;h=h*.95+.03;h+=(noise(u,v)-.5)*.07;}
+    else if(profile==='terrace'){const s=Math.pow(v,1.1),st=Math.floor(s*7)/7;h=(s*.35+st*.65)*.9+.05;h+=(noise(u,v)-.5)*.05;}
+    else if(profile==='coast'){if(u<.18){h=.03;}else{const uu=(u-.18)/.82;h=.45+.22*Math.sin(uu*5.5)+.18*Math.sin(v*4.5+1)+.1*Math.sin((uu+v)*8);h*=.7;}h+=(noise(u,v)-.5)*.06;}
+    else{h=.5+.22*Math.sin(u*5.5)+.18*Math.sin(v*5+1)+.12*Math.sin((u+v)*8.5);h*=.7;h+=(noise(u,v)-.5)*.06;}
+    return Math.max(.02,Math.min(1.08,h));};
+}
+function initLagen(){
+  if(T.ready)return;T.ready=true;
+  if(typeof THREE==='undefined'){
+    $('#terrain').innerHTML=`<div class="fallback"><div class="ic">◭</div><div class="eyebrow" style="justify-content:center">3D offline</div><p>Three.js konnte nicht geladen werden (keine Internetverbindung). Mit Verbindung erscheint hier das Relief-Modell.</p></div>`;return;
+  }
+  const el=$('#terrain');
+  T.scene=new THREE.Scene();T.scene.fog=new THREE.FogExp2(0x0a0807,0.0017);
+  T.cam=new THREE.PerspectiveCamera(42,el.clientWidth/el.clientHeight,1,3000);T.cam.position.set(0,180,330);
+  T.rend=new THREE.WebGLRenderer({antialias:true,alpha:true});T.rend.setPixelRatio(Math.min(devicePixelRatio,2));T.rend.setSize(el.clientWidth,el.clientHeight);el.appendChild(T.rend.domElement);
+  T.scene.add(new THREE.AmbientLight(0xc9d6e0,0.55));
+  const key=new THREE.DirectionalLight(0xffe9c4,1.5);key.position.set(-180,260,140);T.scene.add(key);
+  const rim=new THREE.DirectionalLight(0x7a9b95,0.5);rim.position.set(220,120,-180);T.scene.add(rim);
+  T.group=new THREE.Group();T.scene.add(T.group);
+  T.ray=new THREE.Raycaster();T.mouse=new THREE.Vector2(-9,-9);
+  T.tip=document.createElement('div');T.tip.className='lagen-tip';document.body.appendChild(T.tip);
+  el.addEventListener('pointerdown',e=>{T.drag=true;T.moved=0;T.px=e.clientX;T.py=e.clientY;});
+  window.addEventListener('pointerup',()=>setTimeout(()=>T.drag=false,30));
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();T.mouse.x=((e.clientX-r.left)/r.width)*2-1;T.mouse.y=-((e.clientY-r.top)/r.height)*2+1;
+    if(T.drag){T.moved+=Math.abs(e.clientX-T.px)+Math.abs(e.clientY-T.py);T.rotY+=(e.clientX-T.px)*.006;T.rotX+=(e.clientY-T.py)*.004;T.rotX=Math.max(-1.2,Math.min(0.25,T.rotX));T.px=e.clientX;T.py=e.clientY;}});
+  el.addEventListener('click',()=>{if(T.moved>6)return;T.ray.setFromCamera(T.mouse,T.cam);const hit=T.ray.intersectObjects(T.markers,false)[0];if(hit)openModal(hit.object.userData.id);});
+  buildChips();buildTerrain(LAGEN[0]);animLagen();
+}
+function sizeLagen(){if(T.rend){const el=$('#terrain');T.cam.aspect=el.clientWidth/el.clientHeight;T.cam.updateProjectionMatrix();T.rend.setSize(el.clientWidth,el.clientHeight);}}
+window.addEventListener('resize',()=>{if(cur==='lagen')sizeLagen();});
+function disposeGroup(){T.contours=[];T.markers=[];for(let k=T.group.children.length-1;k>=0;k--){const o=T.group.children[k];T.group.remove(o);if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose();}}
+function buildTerrain(region){
+  T.cur=region;disposeGroup();
+  const H=heightFn(region.profile),GN=T.GN,SIZE=T.SIZE,AMP=T.AMP;
+  const Hg=[];for(let i=0;i<=GN;i++){Hg[i]=[];for(let j=0;j<=GN;j++)Hg[i][j]=H(j/GN,i/GN);}
+  const verts=[],cols=[],idx=[];const c0=new THREE.Color(0x10302b),c1=new THREE.Color(region.col),c2=new THREE.Color(0xF0E0C2);
+  for(let i=0;i<=GN;i++)for(let j=0;j<=GN;j++){const h=Hg[i][j],x=(j/GN-.5)*SIZE,z=(i/GN-.5)*SIZE,y=h*AMP;verts.push(x,y,z);
+    const t=Math.max(0,Math.min(1,h/1.05));const c=t<.5?c0.clone().lerp(c1,t*2):c1.clone().lerp(c2,(t-.5)*2);cols.push(c.r,c.g,c.b);}
+  for(let i=0;i<GN;i++)for(let j=0;j<GN;j++){const a=i*(GN+1)+j,b=a+1,cc=a+(GN+1),d=cc+1;idx.push(a,cc,b,b,cc,d);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));g.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));g.setIndex(idx);g.computeVertexNormals();
+  T.group.add(new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.92,metalness:.06})));
+  buildContours(Hg);addMarkers(region,H);
+  const ws=D.wines.filter(w=>w.region===region.key);
+  $('#lagen-info').innerHTML=`<div class="nm">${esc(region.label)}</div><div class="kv">
+     <span class="k">Höhe</span><span class="v">${region.alt}</span>
+     <span class="k">Boden</span><span class="v">${esc(region.soil)}</span>
+     <span class="k">Lage</span><span class="v">${esc(region.expo)}</span>
+     <span class="k">Rebsorte</span><span class="v">${esc(region.grape)}</span>
+     <span class="k">Deine Flaschen</span><span class="v">${ws.length}</span></div>`;
+  $$('#lagen-chips button').forEach(b=>b.classList.toggle('on',b.dataset.k===region.key));
+}
+function buildContours(Hg){
+  const GN=T.GN,SIZE=T.SIZE,AMP=T.AMP,ths=[0.16,0.30,0.44,0.58,0.72,0.85];
+  const MS={1:[3,2],2:[2,1],3:[3,1],4:[0,1],5:[0,3,1,2],6:[0,2],7:[0,3],8:[0,3],9:[0,2],10:[0,1,3,2],11:[0,1],12:[3,1],13:[2,1],14:[3,2]};
+  const cl=t=>isFinite(t)?Math.max(0,Math.min(1,t)):.5;
+  ths.forEach(th=>{const pos=[];
+    for(let i=0;i<GN;i++)for(let j=0;j<GN;j++){
+      const a=Hg[i][j],b=Hg[i][j+1],c=Hg[i+1][j+1],d=Hg[i+1][j];let id=0;
+      if(a>th)id|=8;if(b>th)id|=4;if(c>th)id|=2;if(d>th)id|=1;if(id===0||id===15)continue;
+      const X=jj=>(jj/GN-.5)*SIZE,Z=ii=>(ii/GN-.5)*SIZE;
+      const ep=[[X(j+cl((th-a)/(b-a))),Z(i)],[X(j+1),Z(i+cl((th-b)/(c-b)))],[X(j+cl((th-d)/(c-d))),Z(i+1)],[X(j),Z(i+cl((th-a)/(d-a)))]];
+      const seg=MS[id];for(let s=0;s<seg.length;s+=2){const p1=ep[seg[s]],p2=ep[seg[s+1]];pos.push(p1[0],th*AMP+.5,p1[1],p2[0],th*AMP+.5,p2[1]);}}
+    if(!pos.length)return;
+    const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    const ln=new THREE.LineSegments(gg,new THREE.LineBasicMaterial({color:0xE8D5B0,transparent:true,opacity:.45}));ln.userData.th=th;T.group.add(ln);T.contours.push(ln);});
+}
+function addMarkers(region,H){
+  const SIZE=T.SIZE,AMP=T.AMP,frac=x=>x-Math.floor(x);
+  const ws=D.wines.filter(w=>w.region===region.key).slice(0,30);const geo=new THREE.SphereGeometry(2.3,12,12);
+  ws.forEach((w,i)=>{let u=frac(Math.sin((i+1)*12.9898)*43758.5453),v=frac(Math.sin((i+1)*78.233)*43758.5453);u=.08+u*.84;v=.08+v*.84;
+    const x=(u-.5)*SIZE,z=(v-.5)*SIZE,y=H(u,v)*AMP,hot=w.rating>=4.5;
+    const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:hot?0xF0E0C2:0xC4A882,emissive:hot?0xC4A882:0x6b5328,emissiveIntensity:hot?.9:.5,roughness:.4,metalness:.3}));
+    m.position.set(x,y+5,z);m.userData.id=w.id;T.group.add(m);T.markers.push(m);
+    const st=new THREE.BufferGeometry();st.setAttribute('position',new THREE.Float32BufferAttribute([x,y,z,x,y+5,z],3));
+    T.group.add(new THREE.Line(st,new THREE.LineBasicMaterial({color:0xC4A882,transparent:true,opacity:.4})));});
+}
+function buildChips(){$('#lagen-chips').innerHTML=LAGEN.map(l=>`<button data-k="${esc(l.key)}" onclick="selectLagen('${esc(l.key)}')">${esc(l.label)}</button>`).join('');}
+function selectLagen(k){const r=LAGEN.find(l=>l.key===k);if(r)buildTerrain(r);}
+function toggleExplode(b){T.explode=T.explode?0:1;b.classList.toggle('on',!!T.explode);}
+function toggleSpin(b){T.spin=!T.spin;b.classList.toggle('on',T.spin);}
+function animLagen(){
+  requestAnimationFrame(animLagen);if(!T.rend||cur!=='lagen'){return;}
+  if(T.spin)T.rotY+=0.0016;T.group.rotation.y=T.rotY;T.group.rotation.x=T.rotX;
+  T.explodeT+=(T.explode-T.explodeT)*0.08;T.contours.forEach(ln=>{ln.position.y=T.explodeT*ln.userData.th*T.AMP*1.8;});
+  T.cam.lookAt(0,T.AMP*0.28,0);
+  if(T.markers.length){T.ray.setFromCamera(T.mouse,T.cam);const hit=T.ray.intersectObjects(T.markers,false)[0];
+    if(hit){const w=byId[hit.object.userData.id];const p=hit.object.getWorldPosition(new THREE.Vector3()).project(T.cam);const el=$('#terrain').getBoundingClientRect();
+      T.tip.style.left=(el.left+(p.x*.5+.5)*el.width)+'px';T.tip.style.top=(el.top+(-p.y*.5+.5)*el.height)+'px';T.tip.textContent=(w.winery||w.name)+(w.rating?' · '+stars(w.rating):'');T.tip.style.opacity=1;document.body.style.cursor='pointer';}
+    else{T.tip.style.opacity=0;document.body.style.cursor='';}}
+  T.rend.render(T.scene,T.cam);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();closePanel();closeSearch();}
+  if((e.key==='/'||((e.metaKey||e.ctrlKey)&&e.key==='k'))&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();openSearch();}
+});
 </script>
 </body>
 </html>
