@@ -267,6 +267,28 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
 .lagen-info .kv .v{font-size:13px;color:var(--ink)}
 .lagen-tip{position:fixed;pointer-events:none;z-index:70;transform:translate(-50%,-150%);background:rgba(12,10,8,.94);border:1px solid var(--line);padding:6px 10px;font-family:var(--mono);font-size:10px;color:var(--g-lite);white-space:nowrap;opacity:0;transition:opacity .15s}
 
+/* GALERIE */
+#gallery{position:fixed;inset:0;z-index:86;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s}
+#gallery.open{opacity:1;visibility:visible}
+#gallery .scrim{position:absolute;inset:0;background:rgba(5,4,3,.86);backdrop-filter:blur(10px)}
+#gallery .gbox{position:relative;z-index:2;background:rgba(14,11,9,.97);border:1px solid var(--line);max-width:920px;width:100%;max-height:88vh;overflow-y:auto;padding:34px;transform:translateY(18px);transition:transform .5s var(--ease)}
+#gallery.open .gbox{transform:none}
+#gallery .x{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--mu);font-size:22px;cursor:pointer;transition:color .3s}
+#gallery .x:hover{color:var(--g)}
+.ghead .reg{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--g)}
+.ghead h3{font-family:var(--serif);font-weight:300;font-size:36px;font-style:italic;margin:6px 0 2px;line-height:1}
+.ghead p{color:var(--mu);font-size:14px}
+.gscenes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:22px 0 6px}
+.gscene{width:100%;height:auto;border:1px solid var(--line2);display:block}
+.gnote{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--mu2);margin-bottom:18px}
+.glab-h{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--mu2);margin:14px 0 10px}
+.glab-strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px}
+.glab{flex:0 0 86px;cursor:pointer;text-align:center}
+.glab img{width:86px;height:120px;object-fit:cover;border:1px solid var(--line2);background:#0a0807}
+.glab span{display:block;font-size:9px;color:var(--mu2);margin-top:5px;line-height:1.2}
+.glab:hover img{border-color:var(--g)}
+@media(max-width:760px){#gallery{padding:0;align-items:flex-end}#gallery .gbox{max-height:94vh;padding:22px}.ghead h3{font-size:28px}}
+
 /* MOBILE / iPhone */
 @media(max-width:760px){
   .brand{top:16px;left:16px}.brand b{font-size:18px}.brand span{display:none}
@@ -342,6 +364,7 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
       <div class="globe-toggle">
         <button class="on" data-layer="origin" onclick="setLayer('origin',this)">Herkunft</button>
         <button data-layer="exp" onclick="setLayer('exp',this)">Erlebnisse</button>
+        <button data-layer="occ" onclick="setLayer('occ',this)">Anlässe</button>
         <button data-layer="reco" onclick="setLayer('reco',this)">Empfehlungen</button>
       </div>
       <div class="globe-legend" id="glegend"></div>
@@ -363,6 +386,7 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
         <div class="lagen-controls">
           <button id="btn-explode" onclick="toggleExplode(this)">Schichten ⤢</button>
           <button id="btn-spin" class="on" onclick="toggleSpin(this)">Rotation ⟳</button>
+          <button onclick="openGallery()">Galerie ▦</button>
         </div>
       </div>
       <div class="lagen-info" id="lagen-info"></div>
@@ -423,6 +447,14 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
       </div>
     </div>
   </section>
+</div>
+
+<div id="gallery"><div class="scrim" onclick="closeGallery()"></div>
+  <div class="gbox"><button class="x" onclick="closeGallery()">✕</button>
+    <div class="ghead" id="ghead"></div>
+    <div class="gscenes" id="gscenes"></div>
+    <div class="glabels" id="glabels"></div>
+  </div>
 </div>
 
 <button id="searchBtn" onclick="openSearch()" aria-label="Suche">⌕</button>
@@ -599,6 +631,15 @@ function renderLayer(){
     pts.push({lat:home.lat,lng:home.lon,alt:.06,rad:.6,col:'#E8D5B0',_tip:tip('Hamburg','Dein Zuhause'),_type:'home',name:'Hamburg'});
     arcs=E.map(v=>({startLat:home.lat,startLng:home.lon,endLat:v.lat,endLng:v.lon,arcCol:['rgba(122,155,149,.05)','#7a9b95']}));
     legend=`<div class="row"><span class="sw" style="background:#7a9b95"></span>Orte, an denen du getrunken hast</div><div class="row"><span class="sw" style="background:#E8D5B0"></span>Hamburg · Heimathafen</div>`;
+  } else if(curLayer==='occ'){
+    const items=D.wines.filter(w=>w.lat!=null).map(w=>({w,occ:occOf(w)})).filter(x=>x.occ.length);
+    const seen={};
+    pts=items.map(({w,occ})=>{const c=occ[0],k=w.lat.toFixed(1)+','+w.lon.toFixed(1),n=(seen[k]=(seen[k]||0)+1);
+      return {lat:w.lat+(n-1)*0.25,lng:w.lon+(n-1)*0.3,alt:.03,rad:.46,col:c.color,_type:'occwine',_id:w.id,
+        _tip:tip(c.label,(w.winery||w.name)+' · '+(w.region||w.countryDe||''))};});
+    arcs=items.map(({w,occ})=>({startLat:home.lat,startLng:home.lon,endLat:w.lat,endLng:w.lon,arcCol:['rgba(245,242,236,.04)',occ[0].color]}));
+    const cnt={};items.forEach(({occ})=>{cnt[occ[0].label]=(cnt[occ[0].label]||0)+1;});
+    legend=OCCDEF.filter(o=>cnt[o[1]]).map(o=>'<div class="row"><span class="sw" style="background:'+o[2]+'"></span>'+o[1]+' · '+cnt[o[1]]+'</div>').join('');
   } else {
     const R=D.recos.filter(r=>r.lat!=null);
     pts=R.map(r=>({...r,lat:r.lat,lng:r.lon,alt:.04,rad:.5,col:r.tier==='Ikone'?'#F0E0C2':r.tier==='Entdeckung'?'#7a9b95':'#C4A882',
@@ -615,6 +656,7 @@ function onPoint(d){
   if(d._type==='sun')return;
   if(world){world.controls().autoRotate=false;world.pointOfView({lat:d.lat,lng:d.lng,altitude:1.5},900);}
   if(d._type==='reco'){go('reco');return;}
+  if(d._type==='occwine'){openModal(d._id);return;}
   const ids=d.ids||[];const ws=ids.map(i=>byId[i]).filter(Boolean).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const sub=d._type==='venue'?`${d.city||''} · ${d.kind}`:`${d.countryDe||''}`;
   $('#gpanel-body').innerHTML=`<div class="ttl">${esc(d.region||d.name)}</div><div class="meta">${esc(sub)} · ${ws.length} Flasche${ws.length>1?'n':''}</div>`+
@@ -754,18 +796,20 @@ function openModal(id){
 function closeModal(){$('#modal').classList.remove('open');}
 
 /* ===================== SUCHE ===================== */
-let SI=null;
-const OCC=[
-  [/geburtstag|zum geb|geb\.|geb von|geb-|geburtstagsgeschenk/i,'Geburtstag'],
-  [/weihnacht/i,'Weihnachten'],[/silvester|31\.12|neujahr/i,'Silvester'],
-  [/geschenk|bekommen|von .* (bekommen|geschenkt)|mitgebracht/i,'Geschenk'],
-  [/hochzeit/i,'Hochzeit'],[/ibiza|urlaub|wandern|reise|sofie hütte|gröden/i,'Reise'],
-  [/jahrgangswein/i,'Jahrgangswein']
+const OCCDEF=[
+  [/geburtstag|zum geb|geb\.|geb von|geb-|geburtstagsgeschenk/i,'Geburtstag','#F0E0C2'],
+  [/weihnacht/i,'Weihnachten','#B0414F'],
+  [/silvester|31\.12|neujahr/i,'Silvester','#C4A882'],
+  [/jahrgangswein/i,'Jahrgangswein','#D98C8C'],
+  [/hochzeit/i,'Hochzeit','#E8D5B0'],
+  [/ibiza|urlaub|wandern|sofie hütte|gröden|reise/i,'Reise','#8FB3D9'],
+  [/geschenk|bekommen|geschenkt|mitgebracht/i,'Geschenk','#7a9b95']
 ];
+function occOf(w){const t=((w.note||'')+' '+(w.review||''));const o=[];OCCDEF.forEach(([rx,l,c])=>{if(rx.test(t))o.push({label:l,color:c});});return o;}
+let SI=null;
 function buildIndex(){
   SI=D.wines.map(w=>{
-    const t=((w.note||'')+' '+(w.review||''));const occ=[];
-    OCC.forEach(([rx,lab])=>{if(rx.test(t))occ.push(lab);});
+    const occ=occOf(w).map(o=>o.label);
     const hay=[w.winery,w.name,w.region,w.countryDe,w.style,w.type,w.note,w.review,
       (w.venue&&w.venue.name),(w.venue&&w.venue.city),(w.people||[]).join(' '),occ.join(' '),w.vintage]
       .filter(Boolean).join(' ').toLowerCase();
@@ -856,14 +900,14 @@ function buildTerrain(region){
   for(let i=0;i<GN;i++)for(let j=0;j<GN;j++){const a=i*(GN+1)+j,b=a+1,cc=a+(GN+1),d=cc+1;idx.push(a,cc,b,b,cc,d);}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));g.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));g.setIndex(idx);g.computeVertexNormals();
   T.group.add(new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.92,metalness:.06})));
-  buildContours(Hg);addMarkers(region,H);
+  buildContours(Hg);addVines(region,H);addMarkers(region,H);
   const ws=D.wines.filter(w=>w.region===region.key);
   $('#lagen-info').innerHTML=`<div class="nm">${esc(region.label)}</div><div class="kv">
      <span class="k">Höhe</span><span class="v">${region.alt}</span>
      <span class="k">Boden</span><span class="v">${esc(region.soil)}</span>
      <span class="k">Lage</span><span class="v">${esc(region.expo)}</span>
      <span class="k">Rebsorte</span><span class="v">${esc(region.grape)}</span>
-     <span class="k">Deine Flaschen</span><span class="v">${ws.length}</span></div>`;
+     <span class="k">Deine Flaschen</span><span class="v">${ws.length}</span></div>`+profileSVG(region,H);
   $$('#lagen-chips button').forEach(b=>b.classList.toggle('on',b.dataset.k===region.key));
 }
 function buildContours(Hg){
@@ -907,8 +951,49 @@ function animLagen(){
   T.rend.render(T.scene,T.cam);
 }
 
+/* ===================== LAGEN · Rebstöcke · Höhenprofil · Galerie ===================== */
+function addVines(region,H){
+  const GN=T.GN,SIZE=T.SIZE,AMP=T.AMP,pos=[];
+  for(let i=4;i<GN;i+=3)for(let j=4;j<GN;j+=3){const u=j/GN,v=i/GN;if(region.profile==='coast'&&u<.2)continue;const h=H(u,v);if(h<.1||h>1.0)continue;
+    const x=(u-.5)*SIZE,z=(v-.5)*SIZE,y=h*AMP;pos.push(x,y,z,x,y+3.4,z);}
+  if(!pos.length)return;const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  T.group.add(new THREE.LineSegments(g,new THREE.LineBasicMaterial({color:0x4e6b5e,transparent:true,opacity:.5})));
+}
+function profileSVG(region,H){
+  const N=64,W=252,Hh=72,pad=6,ys=[];for(let k=0;k<=N;k++)ys.push(H(0.5,k/N));
+  const mn=Math.min(...ys),mx=Math.max(...ys),rng=(mx-mn)||1,X=k=>pad+k/N*(W-2*pad),Y=h=>Hh-pad-((h-mn)/rng)*(Hh-2*pad);
+  let path='M'+X(0).toFixed(1)+' '+Y(ys[0]).toFixed(1);for(let k=1;k<=N;k++)path+=' L'+X(k).toFixed(1)+' '+Y(ys[k]).toFixed(1);
+  const fill=path+' L'+X(N).toFixed(1)+' '+Hh+' L'+X(0).toFixed(1)+' '+Hh+' Z';
+  let vines='';for(let k=4;k<N;k+=4){const x=X(k).toFixed(1),y=Y(ys[k]);vines+='<line x1="'+x+'" y1="'+y.toFixed(1)+'" x2="'+x+'" y2="'+(y-5).toFixed(1)+'" stroke="#6FA68F" stroke-width="1" opacity=".75"/>';}
+  const ws=D.wines.filter(w=>w.region===region.key).slice(0,24),frac=x=>x-Math.floor(x);let dots='';
+  ws.forEach((w,i)=>{const v=.08+frac(Math.sin((i+1)*78.233)*43758.5453)*.84,h=H(0.5,v);dots+='<circle cx="'+X(v*N).toFixed(1)+'" cy="'+Y(h).toFixed(1)+'" r="2.1" fill="'+(w.rating>=4.5?'#F0E0C2':'#C4A882')+'"/>';});
+  const col='#'+region.col.toString(16).padStart(6,'0'),a=(region.alt||'').split('–');
+  return '<svg viewBox="0 0 '+W+' '+(Hh+14)+'" width="100%" style="margin-top:14px;display:block"><defs><linearGradient id="pg'+region.profile+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+col+'" stop-opacity=".4"/><stop offset="1" stop-color="'+col+'" stop-opacity=".03"/></linearGradient></defs><path d="'+fill+'" fill="url(#pg'+region.profile+')"/><path d="'+path+'" fill="none" stroke="#E8D5B0" stroke-width="1.2"/>'+vines+dots+'<text x="'+pad+'" y="'+(Hh+11)+'" fill="rgba(245,242,236,.4)" font-family="DM Mono" font-size="8">'+esc(a[0]||'')+'</text><text x="'+(W-pad)+'" y="'+(Hh+11)+'" text-anchor="end" fill="rgba(245,242,236,.4)" font-family="DM Mono" font-size="8">'+esc(a[1]||'')+'</text></svg><div style="font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu2);margin-top:3px">Höhenprofil · Tal→Kamm · ▏Rebstöcke ●Flaschen</div>';
+}
+function ridge(W,y,amp,seed){let s='';for(let k=1;k<=8;k++)s+='L'+Math.round(W*k/8)+','+Math.round(y+Math.sin(k*1.7+seed)*amp)+' ';return s;}
+function sceneSVG(r,vrt){
+  const W=520,Hgt=300,PL=[['#23323a','#5a5340','#C4A882'],['#16242a','#3a5a52','#E8D5B0'],['#2a1f28','#6e3340','#C4A882']][vrt%3];
+  const sky=PL[0],mid=PL[1],acc=PL[2],reg='#'+r.col.toString(16).padStart(6,'0');let slope;
+  if(r.profile==='volcano')slope='M0,265 L'+(W*.5)+',120 L'+W+',265 L'+W+',300 L0,300 Z';
+  else if(r.profile==='cliff')slope='M0,300 L0,160 L'+W+',262 L'+W+',300 Z';
+  else if(r.profile==='terrace')slope='M0,300 L0,212 L'+W+',150 L'+W+',300 Z';
+  else if(r.profile==='coast')slope='M0,300 L0,250 Q'+(W*.5)+',222 '+W+',236 L'+W+',300 Z';
+  else slope='M0,300 L0,228 Q'+(W*.4)+',200 '+(W*.7)+',224 T'+W+',230 L'+W+',300 Z';
+  let rows='';for(let y=234;y<296;y+=11)for(let x=14;x<W;x+=20)rows+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-6)+'" stroke="'+acc+'" stroke-width="1.3" opacity="'+(.2+(y-234)/90).toFixed(2)+'"/>';
+  return '<svg viewBox="0 0 '+W+' '+Hgt+'" class="gscene"><defs><linearGradient id="sk'+r.profile+vrt+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+sky+'"/><stop offset="1" stop-color="#0a0807"/></linearGradient></defs><rect width="'+W+'" height="'+Hgt+'" fill="url(#sk'+r.profile+vrt+')"/><circle cx="'+(vrt===2?W-90:90)+'" cy="78" r="26" fill="'+acc+'" opacity=".75"/><path d="M0,168 '+ridge(W,168,24,vrt+1)+'L'+W+',300 L0,300 Z" fill="'+mid+'" opacity=".45"/><path d="'+slope+'" fill="'+reg+'" opacity=".5"/><path d="'+slope+'" fill="none" stroke="'+acc+'" stroke-width="1" opacity=".3"/>'+rows+'<text x="18" y="36" font-family="Cormorant Garamond" font-style="italic" font-size="26" fill="#F5F2EC" opacity=".92">'+esc(r.label)+'</text></svg>';
+}
+function openGallery(){
+  if(!T.cur)T.cur=LAGEN[0];const r=T.cur;if(!r)return;
+  $('#ghead').innerHTML='<div class="reg">'+esc(r.alt)+' · '+esc(r.soil)+'</div><h3>'+esc(r.label)+'</h3><p>'+esc(r.expo)+' · '+esc(r.grape)+'</p>';
+  $('#gscenes').innerHTML=[0,1,2].map(v=>sceneSVG(r,v)).join('');
+  const ws=D.wines.filter(w=>w.region===r.key&&w.label).slice(0,14);
+  $('#glabels').innerHTML='<div class="gnote">Editorial-Illustrationen des Anbaugebiets (Topografie & Rebzeilen) — keine Fotos.</div>'+(ws.length?'<div class="glab-h">Deine Flaschen aus dieser Lage</div><div class="glab-strip">'+ws.map(w=>'<div class="glab" onclick="closeGallery();openModal(\''+w.id+'\')"><img src="'+w.label+'" loading="lazy" onerror="this.style.display=\'none\'"><span>'+esc(w.winery||w.name)+'</span></div>').join('')+'</div>':'');
+  $('#gallery').classList.add('open');
+}
+function closeGallery(){$('#gallery').classList.remove('open');}
+
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeModal();closePanel();closeSearch();}
+  if(e.key==='Escape'){closeModal();closePanel();closeSearch();closeGallery();}
   if((e.key==='/'||((e.metaKey||e.ctrlKey)&&e.key==='k'))&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();openSearch();}
 });
 </script>
