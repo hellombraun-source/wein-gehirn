@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Wein-Gehirn · Marcus Braun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@200;300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0807; --bg2:#0f0c0a; --panel:rgba(245,242,236,.045); --panel2:rgba(245,242,236,.07);
+  --line:rgba(196,168,130,.16); --line2:rgba(245,242,236,.10);
+  --ink:#F5F2EC; --mu:rgba(245,242,236,.60); --mu2:rgba(245,242,236,.38); --mu3:rgba(245,242,236,.22);
+  --g:#C4A882; --g-deep:#8B6E3A; --g-lite:#E8D5B0; --red:#B0414F; --redd:#7B2D3A; --teal:#7a9b95;
+  --serif:'Cormorant Garamond',Georgia,serif; --sans:'Inter',-apple-system,system-ui,sans-serif; --mono:'DM Mono',monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--sans); font-weight:300;
+  overflow:hidden; -webkit-font-smoothing:antialiased; letter-spacing:.01em;
+}
+.backdrop{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.backdrop .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5;mix-blend-mode:screen;animation:drift 26s var(--ease) infinite alternate}
+.orb.a{width:60vw;height:60vw;left:-15vw;top:-20vw;background:radial-gradient(circle,rgba(139,110,58,.35),transparent 65%)}
+.orb.b{width:55vw;height:55vw;right:-18vw;bottom:-22vw;background:radial-gradient(circle,rgba(123,45,58,.30),transparent 65%);animation-delay:-8s}
+.orb.c{width:42vw;height:42vw;right:8vw;top:-10vw;background:radial-gradient(circle,rgba(122,155,149,.16),transparent 65%);animation-delay:-15s}
+@keyframes drift{to{transform:translate3d(6vw,5vh,0) scale(1.15)}}
+.grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.vignette{position:fixed;inset:0;z-index:55;pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 30%,transparent 45%,rgba(0,0,0,.55) 100%)}
+
+#intro{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 1.1s var(--ease),visibility 1.1s}
+#intro.gone{opacity:0;visibility:hidden}
+.intro-mark{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(40px,8vw,108px);letter-spacing:.01em;line-height:1;
+  background:linear-gradient(180deg,var(--g-lite),var(--g) 55%,var(--g-deep));-webkit-background-clip:text;background-clip:text;color:transparent;
+  opacity:0;transform:translateY(16px);animation:rise 1.4s var(--ease) .2s forwards}
+.intro-sub{font-family:var(--mono);font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--mu2);margin-top:22px;
+  opacity:0;animation:fade 1.2s ease 1s forwards}
+.intro-bar{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent);margin-top:30px;animation:grow 2.4s var(--ease) .6s forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+@keyframes fade{to{opacity:1}}
+@keyframes grow{to{width:min(360px,60vw)}}
+
+#app{position:relative;z-index:10;height:100%;opacity:0;transition:opacity 1s var(--ease) .1s}
+#app.on{opacity:1}
+.brand{position:fixed;top:26px;left:34px;z-index:40;display:flex;align-items:center;gap:13px;pointer-events:none}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--g);box-shadow:0 0 14px var(--g)}
+.brand b{font-family:var(--serif);font-style:italic;font-weight:400;font-size:21px;letter-spacing:.02em}
+.brand span{font-family:var(--mono);font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--mu2);margin-left:2px}
+
+.view{position:absolute;inset:0;padding:96px 0 120px;overflow-y:auto;overflow-x:hidden;
+  opacity:0;visibility:hidden;transform:translateY(22px) scale(.992);transition:opacity .8s var(--ease),transform .8s var(--ease),visibility .8s;
+  scrollbar-width:thin;scrollbar-color:var(--g-deep) transparent}
+.view::-webkit-scrollbar{width:7px}.view::-webkit-scrollbar-thumb{background:var(--g-deep);border-radius:4px}
+.view.active{opacity:1;visibility:visible;transform:none}
+.wrap{max-width:1320px;margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--g);display:flex;align-items:center;gap:14px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--g)}
+h1.big{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6.4vw,92px);line-height:1.02;letter-spacing:-.01em;margin:.28em 0}
+h1.big em{font-style:italic;color:var(--g)}
+.lead{font-family:var(--serif);font-weight:300;font-size:clamp(17px,1.7vw,23px);color:var(--mu);max-width:60ch;line-height:1.5}
+h2.sec{font-family:var(--serif);font-weight:300;font-size:clamp(28px,3.6vw,52px);line-height:1.05;margin:.2em 0 .1em}
+h2.sec em{font-style:italic;color:var(--g)}
+
+#v-home .hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;margin-top:54px;background:var(--line2);border:1px solid var(--line2)}
+.stat{background:var(--bg);padding:26px 22px;position:relative;transition:background .5s}
+.stat:hover{background:var(--bg2)}
+.stat .n{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4vw,56px);line-height:1;color:var(--g-lite)}
+.stat .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mu2);margin-top:11px}
+.scrollcue{margin-top:46px;display:inline-flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--mu2);cursor:pointer;border:none;background:none}
+.scrollcue:hover{color:var(--g)}
+.chip{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:30px}
+.hl{background:var(--panel);border:1px solid var(--line);padding:24px;backdrop-filter:blur(12px);transition:transform .6s var(--ease),border-color .6s,background .6s;cursor:pointer}
+.hl:hover{transform:translateY(-4px);border-color:var(--g);background:var(--panel2)}
+.hl .tag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--g)}
+.hl h3{font-family:var(--serif);font-weight:400;font-size:25px;margin:10px 0 6px;font-style:italic}
+.hl p{font-size:14px;color:var(--mu);line-height:1.55}
+
+#v-globe{padding:0;overflow:hidden}
+#globe{position:absolute;inset:0}
+.globe-ui{position:absolute;inset:0;pointer-events:none;z-index:5}
+.globe-head{position:absolute;top:92px;left:clamp(20px,5vw,64px);max-width:440px;pointer-events:none}
+.globe-toggle{position:absolute;top:92px;right:clamp(20px,5vw,64px);display:flex;gap:0;border:1px solid var(--line);backdrop-filter:blur(12px);pointer-events:auto}
+.globe-toggle button{background:transparent;border:none;color:var(--mu);font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:11px 16px;cursor:pointer;transition:all .4s;border-right:1px solid var(--line2)}
+.globe-toggle button:last-child{border-right:none}
+.globe-toggle button.on{background:var(--g);color:#15110c}
+.globe-legend{position:absolute;bottom:130px;left:clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:9px;pointer-events:none;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--mu)}
+.globe-legend .row{display:flex;align-items:center;gap:10px}
+.globe-legend .sw{width:11px;height:11px;border-radius:50%}
+.panel{position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);background:rgba(12,10,8,.86);backdrop-filter:blur(22px);border-left:1px solid var(--line);
+  transform:translateX(100%);transition:transform .7s var(--ease);pointer-events:auto;z-index:8;overflow-y:auto;padding:96px 30px 40px}
+.panel.open{transform:none}
+.panel .x{position:absolute;top:88px;right:26px;background:none;border:1px solid var(--line2);color:var(--mu);width:34px;height:34px;cursor:pointer;font-size:16px;transition:all .4s}
+.panel .x:hover{border-color:var(--g);color:var(--g)}
+.panel .ttl{font-family:var(--serif);font-style:italic;font-size:34px;font-weight:300;line-height:1.05}
+.panel .meta{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-top:8px}
+.miniwine{border-top:1px solid var(--line2);padding:15px 0;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:padding-left .4s}
+.miniwine:hover{padding-left:6px}
+.miniwine .yr{font-family:var(--mono);font-size:11px;color:var(--mu2);min-width:34px;padding-top:3px}
+.miniwine .nm{font-size:14px;line-height:1.35}.miniwine .nm b{font-weight:500}
+.miniwine .nm small{display:block;color:var(--mu2);font-size:12px;margin-top:2px}
+.stars{color:var(--g);font-size:12px;letter-spacing:1px;white-space:nowrap;padding-top:2px}
+
+.yrblock{margin-top:50px;position:relative}
+.yrline{display:flex;align-items:baseline;gap:18px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:6px}
+.yrline .y{font-family:var(--serif);font-size:clamp(40px,5vw,72px);font-weight:400;color:var(--g-lite);line-height:1}
+.yrline .c{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mu2)}
+.tlcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:18px}
+.tlcard{background:var(--panel);border:1px solid var(--line);padding:18px;cursor:pointer;transition:transform .5s var(--ease),border-color .5s,background .5s;display:flex;flex-direction:column;gap:8px}
+.tlcard:hover{transform:translateY(-3px);border-color:var(--g);background:var(--panel2)}
+.tlcard .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tlcard .dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--mu2);text-transform:uppercase}
+.tlcard h4{font-family:var(--serif);font-size:21px;font-weight:400;line-height:1.12}
+.tlcard h4 small{display:block;color:var(--mu);font-size:13px;font-family:var(--sans);margin-top:3px}
+.tlcard .q{font-size:13.5px;color:var(--mu);font-style:italic;line-height:1.5;border-left:2px solid var(--g-deep);padding-left:11px}
+.tlcard .ft{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.pill{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--line2);color:var(--mu)}
+.pill.p{border-color:var(--g-deep);color:var(--g)}
+.pill.v{border-color:rgba(122,155,149,.4);color:var(--teal)}
+
+.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;margin-top:40px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);padding:28px;backdrop-filter:blur(12px)}
+.card h3{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--mu2);margin-bottom:22px;display:flex;align-items:center;gap:12px}
+.card h3::after{content:"";flex:1;height:1px;background:var(--line2)}
+.bar{display:grid;grid-template-columns:120px 1fr 70px;align-items:center;gap:14px;margin-bottom:13px}
+.bar .nm{font-size:13px;color:var(--mu)}
+.bar .track{height:7px;background:var(--line2);position:relative;overflow:hidden}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--g-deep),var(--g));transition:width 1.3s var(--ease)}
+.bar .vv{font-family:var(--mono);font-size:12px;color:var(--g-lite);text-align:right}
+.bar .vv small{color:var(--mu2)}
+.chartrow{display:flex;gap:30px;align-items:center;flex-wrap:wrap;justify-content:center}
+.legend{display:flex;flex-direction:column;gap:12px}
+.legend .li{display:flex;align-items:center;gap:11px;font-size:13px;color:var(--mu)}
+.legend .li b{color:var(--ink);font-weight:400}
+.legend .sw{width:12px;height:12px;border-radius:2px}
+.fp-wrap{display:flex;justify-content:center;padding:10px 0}
+.rdist{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:10px}
+.rdist .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;justify-content:flex-end;height:100%}
+.rdist .bb{width:100%;max-width:46px;background:linear-gradient(180deg,var(--g),var(--g-deep));height:0;transition:height 1.2s var(--ease)}
+.rdist .rl{font-family:var(--mono);font-size:11px;color:var(--mu)}
+.rdist .rn{font-family:var(--mono);font-size:10px;color:var(--g-lite)}
+
+.feat{display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;background:var(--panel);border:1px solid var(--line);padding:34px;margin-top:40px;backdrop-filter:blur(12px)}
+@media(max-width:720px){.feat{grid-template-columns:1fr;text-align:center}}
+.feat .ava{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-size:54px;color:var(--g-lite);
+  background:radial-gradient(circle at 35% 30%,rgba(196,168,130,.22),rgba(139,110,58,.06));border:1px solid var(--g-deep);box-shadow:0 0 50px rgba(196,168,130,.18) inset}
+.feat .meta b{font-family:var(--serif);font-style:italic;font-size:38px;font-weight:300}
+.feat .meta .ctx{color:var(--mu);font-size:15px;margin:8px 0 14px;max-width:54ch;line-height:1.5}
+.feat .cnt{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--g)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:18px}
+.pcard{background:var(--panel);border:1px solid var(--line);padding:22px;cursor:pointer;transition:transform .5s var(--ease),border-color .5s,background .5s;display:flex;flex-direction:column;gap:10px}
+.pcard:hover{transform:translateY(-4px);border-color:var(--g);background:var(--panel2)}
+.pcard .ava{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-size:24px;color:var(--g-lite);background:radial-gradient(circle at 35% 30%,rgba(196,168,130,.18),transparent);border:1px solid var(--line)}
+.pcard .nm{font-family:var(--serif);font-style:italic;font-size:23px;font-weight:300}
+.pcard .ctx{font-size:12.5px;color:var(--mu2);line-height:1.45}
+.pcard .cnt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g);margin-top:auto}
+
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;margin-top:40px}
+.rcard{background:var(--panel);border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:12px;transition:transform .5s var(--ease),border-color .5s,background .5s;position:relative;overflow:hidden}
+.rcard:hover{transform:translateY(-4px);border-color:var(--g);background:var(--panel2)}
+.rcard .badge{position:absolute;top:0;right:0;font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;padding:6px 12px;background:var(--g);color:#15110c}
+.rcard .badge.disc{background:var(--teal)}.rcard .badge.pl{background:var(--g-deep);color:var(--ink)}
+.rcard .reg{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--g)}
+.rcard h4{font-family:var(--serif);font-size:25px;font-weight:400;line-height:1.08}
+.rcard h4 small{display:block;font-family:var(--sans);font-size:13px;color:var(--mu);margin-top:3px}
+.rcard .why{font-size:13.5px;color:var(--mu);line-height:1.55}
+.rcard .anchors{font-size:12px;color:var(--g);font-style:italic;font-family:var(--serif);border-top:1px solid var(--line2);padding-top:11px}
+.rcard .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px}
+.rcard .price{font-family:var(--mono);font-size:13px;color:var(--g-lite)}
+.rcard .grape{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu2)}
+.strip{display:flex;gap:12px;overflow-x:auto;margin-top:20px;padding-bottom:10px;scrollbar-width:thin;scrollbar-color:var(--g-deep) transparent}
+.scard{flex:0 0 240px;background:var(--panel);border:1px solid var(--line);padding:18px;cursor:pointer;transition:border-color .4s,background .4s}
+.scard:hover{border-color:var(--g);background:var(--panel2)}
+.scard .reg{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mu2)}
+.scard h5{font-family:var(--serif);font-size:19px;font-weight:400;margin:7px 0 4px;line-height:1.12}
+.scard h5 small{display:block;font-family:var(--sans);font-size:12px;color:var(--mu);margin-top:2px}
+.scard .av{font-family:var(--mono);font-size:11px;color:var(--g)}
+
+#modal{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s}
+#modal.open{opacity:1;visibility:visible}
+#modal .scrim{position:absolute;inset:0;background:rgba(5,4,3,.82);backdrop-filter:blur(8px)}
+#modal .box{position:relative;z-index:2;background:rgba(14,11,9,.96);border:1px solid var(--line);max-width:640px;width:100%;max-height:86vh;overflow-y:auto;
+  transform:translateY(20px) scale(.97);transition:transform .6s var(--ease);display:grid;grid-template-columns:200px 1fr}
+#modal.open .box{transform:none}
+@media(max-width:600px){#modal .box{grid-template-columns:1fr}}
+#modal .lbl{background:#0a0807;display:flex;align-items:center;justify-content:center;padding:20px;border-right:1px solid var(--line2)}
+#modal .lbl img{max-width:100%;max-height:280px;object-fit:contain;filter:drop-shadow(0 20px 40px rgba(0,0,0,.6))}
+#modal .lbl .noimg{font-family:var(--serif);font-style:italic;font-size:64px;color:var(--g-deep)}
+#modal .body{padding:32px 30px}
+#modal .reg{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--g)}
+#modal h3{font-family:var(--serif);font-weight:300;font-size:32px;line-height:1.06;margin:9px 0 4px}
+#modal h3 small{display:block;font-family:var(--sans);font-size:15px;color:var(--mu);margin-top:4px}
+#modal .kv{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+#modal .qt{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink);line-height:1.5;border-left:2px solid var(--g);padding-left:14px;margin:16px 0}
+#modal .nt{font-size:13.5px;color:var(--mu);line-height:1.55;margin-top:8px}
+#modal a.link{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--g);text-decoration:none;margin-top:20px;border:1px solid var(--line);padding:11px 16px;transition:all .4s}
+#modal a.link:hover{border-color:var(--g);background:var(--g);color:#15110c}
+#modal .x{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--mu);font-size:24px;cursor:pointer;z-index:3;width:34px;height:34px;transition:color .3s}
+#modal .x:hover{color:var(--g)}
+
+nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:2px;
+  background:rgba(14,11,9,.72);backdrop-filter:blur(20px) saturate(1.4);border:1px solid var(--line);padding:6px}
+nav button{background:none;border:none;color:var(--mu2);cursor:pointer;padding:11px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  transition:color .4s,background .4s;position:relative;white-space:nowrap}
+nav button:hover{color:var(--mu)}
+nav button.on{color:var(--g-lite)}
+nav button.on::after{content:"";position:absolute;left:50%;bottom:3px;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g)}
+nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
+@media(max-width:760px){
+  nav{left:0;right:0;transform:none;bottom:0;width:100%;justify-content:flex-start;overflow-x:auto;border-left:none;border-right:none}
+  nav button .tx{display:none}
+  nav button{padding:13px 18px;font-size:16px}
+}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:40px}
+.fallback .ic{font-size:50px;filter:grayscale(.3)}
+.fallback p{color:var(--mu);max-width:40ch;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="backdrop"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+<div class="grain"></div><div class="vignette"></div>
+
+<div id="intro">
+  <div class="intro-mark">Wein-Gehirn</div>
+  <div class="intro-sub">Marcus Braun · Eine Karte des Geschmacks</div>
+  <div class="intro-bar"></div>
+</div>
+
+<div id="app">
+  <div class="brand"><div class="dot"></div><b>Wein-Gehirn</b><span>MB</span></div>
+
+  <section class="view" id="v-home">
+    <div class="wrap">
+      <div class="hero">
+        <div class="reveal"><div class="eyebrow">Ein Leben in Flaschen · seit <span id="since"></span></div>
+        <h1 class="big">Jede Flasche ist<br>ein <em>Ort</em>, ein <em>Moment</em>,<br>ein <em>Mensch</em>.</h1>
+        <p class="lead">Dein Vivino-Archiv, verwandelt in ein navigierbares Gedächtnis. Wo und wann du welche Weine getrunken hast — mit wem — und wohin dein Geschmack als Nächstes reisen sollte.</p></div>
+        <div class="stats reveal" id="statgrid"></div>
+        <button class="scrollcue" onclick="go('globe')"><span class="chip"></span> Die Welt erkunden</button>
+      </div>
+      <div style="margin-top:90px" class="reveal">
+        <div class="eyebrow">Worauf dein Gaumen schwört</div>
+        <h2 class="sec">Die <em>Signatur</em> deines Kellers.</h2>
+        <div class="hl-grid" id="highlights"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="v-globe">
+    <div id="globe"></div>
+    <div class="globe-ui">
+      <div class="globe-head">
+        <div class="eyebrow">Deine Weinwelt in 3D</div>
+        <h2 class="sec" style="margin-top:.15em">Wo dein Wein <em>herkommt.</em></h2>
+        <p class="lead" style="font-size:15px;margin-top:10px">Jeder Punkt eine Region. Größe = wie oft. Leuchtkraft = wie sehr du sie liebst. Bögen ziehen von Hamburg zu jeder Herkunft.</p>
+      </div>
+      <div class="globe-toggle">
+        <button class="on" data-layer="origin" onclick="setLayer('origin',this)">Herkunft</button>
+        <button data-layer="exp" onclick="setLayer('exp',this)">Erlebnisse</button>
+        <button data-layer="reco" onclick="setLayer('reco',this)">Empfehlungen</button>
+      </div>
+      <div class="globe-legend" id="glegend"></div>
+    </div>
+    <div class="panel" id="gpanel">
+      <button class="x" onclick="closePanel()">✕</button>
+      <div id="gpanel-body"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-time">
+    <div class="wrap">
+      <div class="reveal"><div class="eyebrow">Die Chronik</div>
+      <h1 class="big">Deine <em>Reise</em><br>durch die Jahre.</h1>
+      <p class="lead">Vom ersten Scan 2016 bis heute — die Abende, die Geschenke, die Geburtstage. Jede Karte ein Moment, den du festgehalten hast.</p></div>
+      <div id="timeline"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-taste">
+    <div class="wrap">
+      <div class="reveal"><div class="eyebrow">Das Psychogramm</div>
+      <h1 class="big">Dein Geschmack,<br><em>vermessen.</em></h1>
+      <p class="lead">Wohin dein Gaumen tendiert: Länder, Stile, Farben, Bewertungen. Kein Bauchgefühl — sondern 414 Datenpunkte.</p></div>
+      <div class="grid2">
+        <div class="card reveal"><h3>Deine Weinwelt · nach Ländern</h3><div id="c-country"></div></div>
+        <div class="card reveal"><h3>Geschmacks-Fingerabdruck</h3><div class="fp-wrap" id="c-finger"></div></div>
+      </div>
+      <div class="grid2" style="grid-template-columns:.8fr 1.2fr">
+        <div class="card reveal"><h3>Farbe im Glas</h3><div class="chartrow"><div id="c-donut"></div><div class="legend" id="c-donut-leg"></div></div></div>
+        <div class="card reveal"><h3>Wie streng du urteilst · deine Sterne</h3><div class="rdist" id="c-rating"></div></div>
+      </div>
+      <div class="card reveal" style="margin-top:24px"><h3>Top-Regionen · dein Herzland</h3><div id="c-region"></div></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-people">
+    <div class="wrap">
+      <div class="reveal"><div class="eyebrow">Wein ist nie allein</div>
+      <h1 class="big">Mit <em>wem</em><br>du angestoßen hast.</h1>
+      <p class="lead">Aus deinen eigenen Notizen erkannt. Die Menschen, die in deinen Flaschen vorkommen — manche flüchtig, einer überall. <span style="color:var(--mu2)">(Auto-erkannt — bitte gegenlesen.)</span></p></div>
+      <div id="people-feat"></div>
+      <div class="pgrid" id="people-grid"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-reco">
+    <div class="wrap">
+      <div class="reveal"><div class="eyebrow">Der nächste Schluck</div>
+      <h1 class="big">Was du als<br>Nächstes <em>öffnen</em> solltest.</h1>
+      <p class="lead">Keine Zufallsliste. Jede Empfehlung leitet sich aus dem ab, was du selbst mit 4,5–5★ geadelt hast — der logische nächste Schritt deiner Achsen.</p></div>
+      <div class="rgrid" id="reco-grid"></div>
+      <div style="margin-top:70px" class="reveal">
+        <div class="eyebrow">Schon bei dir — noch nicht bewertet</div>
+        <h2 class="sec">Im <em>Keller</em> wartet …</h2>
+        <div class="strip" id="cellar-strip"></div>
+      </div>
+      <div style="margin-top:50px" class="reveal">
+        <div class="eyebrow">Deine Wunschliste</div>
+        <h2 class="sec">Auf dem <em>Radar.</em></h2>
+        <div class="strip" id="wish-strip"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="modal"><div class="scrim" onclick="closeModal()"></div>
+  <div class="box"><button class="x" onclick="closeModal()">✕</button>
+    <div class="lbl" id="m-lbl"></div><div class="body" id="m-body"></div></div>
+</div>
+
+<nav id="nav"></nav>
+
+<script src="data.js"></script>
+<script src="https://unpkg.com/globe.gl@2" crossorigin="anonymous"></script>
+<script>
+const D = window.WINE_DATA, S = D.stats;
+const byId = {}; D.wines.forEach(w=>byId[w.id]=w);
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const stars=n=>n?'★'.repeat(Math.floor(n))+(n%1?'½':''):'';
+
+window.addEventListener('load',()=>{
+  setTimeout(()=>{$('#intro').classList.add('gone');$('#app').classList.add('on');
+    $('#v-home').classList.add('active');revealScan($('#v-home'));},2600);
+});
+
+const VIEWS=[
+  ['home','◈','Übersicht'],['globe','✦','Welt'],['time','❧','Reise'],
+  ['taste','◉','Geschmack'],['people','⚭','Menschen'],['reco','✷','Empfehlungen']
+];
+const nav=$('#nav');
+VIEWS.forEach(([id,ic,tx])=>{
+  const b=document.createElement('button');b.dataset.v=id;b.innerHTML=`<span class="ic">${ic}</span><span class="tx">${tx}</span>`;
+  b.onclick=()=>go(id);nav.appendChild(b);
+});
+$$('#nav button')[0].classList.add('on');
+let cur='home';
+function go(id){
+  if(id===cur)return;cur=id;
+  $$('.view').forEach(v=>v.classList.remove('active'));
+  $('#v-'+id).classList.add('active');
+  $$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===id));
+  const v=$('#v-'+id);v.scrollTop=0;revealScan(v);
+  if(id==='globe'){initGlobe();setTimeout(sizeGlobe,80);}
+  if(id==='taste')setTimeout(animCharts,260);
+}
+function revealScan(root){
+  $$('.reveal',root).forEach((el,i)=>{el.classList.remove('in');setTimeout(()=>el.classList.add('in'),90+i*120);});
+}
+
+/* OVERVIEW */
+$('#since').textContent=D.owner.since;
+const years=(new Date(S.lastDate)-new Date(S.firstDate))/3.15e10;
+const STATS=[
+  [S.totalWines,'Weine erlebt'],[S.countries,'Länder'],[S.regions,'Regionen'],
+  [S.ratedWines,'selbst bewertet'],[S.people,'Wein-Menschen'],[Math.round(years),'Jahre Archiv'],
+  [S.cellar,'im Keller'],[(S.avgRating||0).toFixed(2),'Ø dein Urteil']
+];
+$('#statgrid').innerHTML=STATS.map(([n,l])=>`<div class="stat"><div class="n" data-to="${n}">0</div><div class="l">${l}</div></div>`).join('');
+function animCount(){
+  $$('#statgrid .n').forEach(el=>{
+    const to=parseFloat(el.dataset.to),dec=(el.dataset.to+'').includes('.');let st=null;
+    const step=t=>{st=st||t;const p=Math.min((t-st)/1100,1),e=1-Math.pow(1-p,3);
+      el.textContent=dec?(to*e).toFixed(2):Math.round(to*e);if(p<1)requestAnimationFrame(step);};
+    requestAnimationFrame(step);
+  });
+}
+setTimeout(animCount,2850);
+
+const topC=S.byCountry[0],topR=S.byRegion[0];
+const fav=D.wines.filter(w=>w.rating>=5).sort((a,b)=>(b.avg||0)-(a.avg||0));
+const HLS=[
+  ['Dein Epizentrum',`${topC.countryDe}`,`${topC.count} Weine — fast die Hälfte deines Archivs. Dein Gaumen hat einen Pass, und er ist ${topC.countryDe.toLowerCase()}.`,()=>go('taste')],
+  ['Meistgeliebte Lage',`${topR.region}`,`${topR.count} Flaschen aus ${topR.region}. Mehr als jede andere Lage der Welt — deine Heimat im Glas.`,()=>go('globe')],
+  ['Dein engster Kreis',`${D.people[0].name}`,`${D.people[0].count} Flaschen tragen seinen Namen in deinen Notizen — Geschenke, Geburtstage, gemeinsame Abende.`,()=>go('people')],
+  ['Was dich umhaut',`${fav.length}× fünf Sterne`,`Von Gaja Barbaresco bis Lynch-Bages — die Flaschen, bei denen du „mehr geht nicht" geschrieben hast.`,()=>go('time')]
+];
+$('#highlights').innerHTML=HLS.map((h,i)=>`<div class="hl" onclick="HLF[${i}]()"><div class="tag">${h[0]}</div><h3>${esc(h[1])}</h3><p>${esc(h[2])}</p></div>`).join('');
+window.HLF=HLS.map(h=>h[3]);
+
+/* GLOBE */
+let world=null,curLayer='origin',globeReady=false;
+function regionAgg(){
+  const m={};
+  D.wines.forEach(w=>{if(w.lat==null||!w.region)return;const k=w.country+'|'+w.region;
+    (m[k]=m[k]||{region:w.region,country:w.country,countryDe:w.countryDe,lat:w.lat,lon:w.lon,ids:[],rs:[]});
+    m[k].ids.push(w.id);if(w.rating)m[k].rs.push(w.rating);});
+  return Object.values(m).map(r=>({...r,count:r.ids.length,avg:r.rs.length?r.rs.reduce((a,b)=>a+b)/r.rs.length:null}));
+}
+function expAgg(){
+  const m={};
+  D.wines.forEach(w=>{if(!w.venue||w.venue.lat==null)return;const k=w.venue.name;
+    (m[k]=m[k]||{name:w.venue.name,city:w.venue.city,kind:w.venue.kind,lat:w.venue.lat,lon:w.venue.lon,ids:[]});
+    m[k].ids.push(w.id);});
+  return Object.values(m).map(v=>({...v,count:v.ids.length}));
+}
+const colorRating=a=>a==null?'rgba(196,168,130,.5)':a>=4.7?'#F0E0C2':a>=4.3?'#E8D5B0':a>=3.9?'#C4A882':a>=3.4?'#A8854E':'#8B6E3A';
+function initGlobe(){
+  if(globeReady)return;globeReady=true;
+  if(typeof Globe==='undefined'){
+    $('#globe').innerHTML=`<div class="fallback"><div class="ic">🌍</div><div class="eyebrow" style="justify-content:center">Globus offline</div><p>Die 3D-Bibliothek konnte nicht geladen werden (keine Internetverbindung). Alle anderen Ansichten funktionieren vollständig offline.</p></div>`;
+    return;
+  }
+  world=Globe()(document.getElementById('globe'))
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
+    .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+    .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+    .showAtmosphere(true).atmosphereColor('#C4A882').atmosphereAltitude(.17)
+    .pointAltitude('alt').pointRadius('rad').pointColor('col')
+    .pointLabel(d=>d._tip).onPointClick(onPoint)
+    .arcColor('arcCol').arcAltitudeAutoScale(.45).arcStroke(.32)
+    .arcDashLength(.5).arcDashGap(.4).arcDashAnimateTime(3500)
+    .ringColor(()=>t=>`rgba(232,213,176,${1-t})`).ringMaxRadius('rMax').ringPropagationSpeed(1.4).ringRepeatPeriod('rPer');
+  world.controls().autoRotate=true;world.controls().autoRotateSpeed=.38;world.controls().enableDamping=true;
+  world.pointOfView({lat:44,lng:9,altitude:2.3},0);
+  renderLayer();
+}
+function sizeGlobe(){if(world){const e=$('#globe');world.width(e.clientWidth).height(e.clientHeight);}}
+window.addEventListener('resize',()=>{if(cur==='globe')sizeGlobe();});
+
+function setLayer(l,btn){curLayer=l;$$('.globe-toggle button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderLayer();}
+function renderLayer(){
+  if(!world)return;closePanel();
+  const home=D.owner.home;let pts=[],arcs=[],rings=[],legend='';
+  if(curLayer==='origin'){
+    const R=regionAgg();
+    pts=R.map(r=>({...r,lat:r.lat,lng:r.lon,alt:.01+Math.min(r.count,40)*.006,rad:.28+Math.sqrt(r.count)*.13,col:colorRating(r.avg),
+      _tip:tip(r.region,`${r.countryDe} · ${r.count} Wein${r.count>1?'e':''}${r.avg?' · Ø '+r.avg.toFixed(1)+'★':''}`),_type:'region'}));
+    arcs=R.map(r=>({startLat:home.lat,startLng:home.lon,endLat:r.lat,endLng:r.lon,arcCol:['rgba(196,168,130,.05)',colorRating(r.avg)]}));
+    rings=R.filter(r=>r.count>=6).map(r=>({lat:r.lat,lng:r.lon,rMax:2.4,rPer:1100}));
+    legend=`<div class="row"><span class="sw" style="background:#F0E0C2"></span>5★ — verehrt</div><div class="row"><span class="sw" style="background:#C4A882"></span>4★ — geliebt</div><div class="row"><span class="sw" style="background:#8B6E3A"></span>solide / ungerankt</div><div class="row" style="margin-top:6px;color:var(--mu2)">○ Größe = Anzahl Flaschen</div>`;
+  } else if(curLayer==='exp'){
+    const E=expAgg();
+    pts=E.map(v=>({...v,lat:v.lat,lng:v.lon,alt:.01+Math.min(v.count,12)*.012,rad:.34+Math.sqrt(v.count)*.18,col:'#7a9b95',
+      _tip:tip(v.name,`${v.city||''} · ${v.kind} · ${v.count} Wein${v.count>1?'e':''}`),_type:'venue'}));
+    pts.push({lat:home.lat,lng:home.lon,alt:.06,rad:.6,col:'#E8D5B0',_tip:tip('Hamburg','Dein Zuhause'),_type:'home',name:'Hamburg'});
+    arcs=E.map(v=>({startLat:home.lat,startLng:home.lon,endLat:v.lat,endLng:v.lon,arcCol:['rgba(122,155,149,.05)','#7a9b95']}));
+    legend=`<div class="row"><span class="sw" style="background:#7a9b95"></span>Orte, an denen du getrunken hast</div><div class="row"><span class="sw" style="background:#E8D5B0"></span>Hamburg · Heimathafen</div>`;
+  } else {
+    const R=D.recos.filter(r=>r.lat!=null);
+    pts=R.map(r=>({...r,lat:r.lat,lng:r.lon,alt:.04,rad:.5,col:r.tier==='Ikone'?'#F0E0C2':r.tier==='Entdeckung'?'#7a9b95':'#C4A882',
+      _tip:tip(r.winery,`${r.name} · ${r.countryDe} · ${r.tier}`),_type:'reco',_reco:r}));
+    rings=R.map(r=>({lat:r.lat,lng:r.lon,rMax:2.8,rPer:900}));
+    legend=`<div class="row"><span class="sw" style="background:#F0E0C2"></span>Ikone</div><div class="row"><span class="sw" style="background:#7a9b95"></span>Entdeckung</div><div class="row"><span class="sw" style="background:#C4A882"></span>Preis-Leistung</div>`;
+  }
+  world.pointsData(pts).arcsData(arcs).ringsData(rings);
+  $('#glegend').innerHTML=legend;
+}
+function tip(t,s){return `<div style="background:rgba(12,10,8,.92);border:1px solid rgba(196,168,130,.3);padding:9px 13px;font-family:'DM Mono',monospace;font-size:11px;color:#F5F2EC;backdrop-filter:blur(8px)"><b style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;font-weight:400;display:block;margin-bottom:3px">${esc(t)}</b><span style="color:rgba(245,242,236,.6);letter-spacing:.08em">${esc(s)}</span></div>`;}
+function onPoint(d){
+  if(world){world.controls().autoRotate=false;world.pointOfView({lat:d.lat,lng:d.lng,altitude:1.5},900);}
+  if(d._type==='reco'){go('reco');return;}
+  const ids=d.ids||[];const ws=ids.map(i=>byId[i]).filter(Boolean).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const sub=d._type==='venue'?`${d.city||''} · ${d.kind}`:`${d.countryDe||''}`;
+  $('#gpanel-body').innerHTML=`<div class="ttl">${esc(d.region||d.name)}</div><div class="meta">${esc(sub)} · ${ws.length} Flasche${ws.length>1?'n':''}</div>`+
+    ws.map(w=>miniwine(w)).join('');
+  $('#gpanel').classList.add('open');
+}
+function miniwine(w){
+  return `<div class="miniwine" onclick="openModal('${w.id}')"><div class="yr">${w.vintage||'—'}</div>
+    <div class="nm"><b>${esc(w.winery||w.name)}</b><small>${esc(w.name)}</small></div>
+    <div class="stars">${w.rating?stars(w.rating):''}</div></div>`;
+}
+function closePanel(){$('#gpanel').classList.remove('open');if(world)world.controls().autoRotate=true;}
+
+/* TIMELINE */
+(function(){
+  const dated=D.wines.filter(w=>w.date).sort((a,b)=>b.date.localeCompare(a.date));
+  const byY={};dated.forEach(w=>{(byY[w.date.slice(0,4)]=byY[w.date.slice(0,4)]||[]).push(w);});
+  const score=w=>(w.rating?w.rating*2:0)+(w.note?3:0)+(w.review?3:0)+(w.people.length?4:0)+(w.venue?1:0);
+  let html='';
+  Object.keys(byY).sort((a,b)=>b-a).forEach(y=>{
+    const all=byY[y];const feat=[...all].sort((a,b)=>score(b)-score(a)).slice(0,6);
+    html+=`<div class="yrblock reveal"><div class="yrline"><span class="y">${y}</span><span class="c">${all.length} Weine · ${feat.filter(w=>w.rating).length} bewertet</span></div><div class="tlcards">`;
+    feat.forEach(w=>{
+      const q=w.review||w.note||'';
+      const dt=new Date(w.date).toLocaleDateString('de-DE',{day:'2-digit',month:'short'});
+      html+=`<div class="tlcard" onclick="openModal('${w.id}')"><div class="top"><span class="dt">${dt} · ${esc(w.region||w.countryDe||'')}</span><span class="stars">${w.rating?stars(w.rating):''}</span></div>
+        <h4>${esc(w.winery||w.name)}<small>${esc(w.name)}</small></h4>
+        ${q?`<div class="q">„${esc(q.slice(0,120))}${q.length>120?'…':''}"</div>`:''}
+        <div class="ft">${w.people.map(p=>`<span class="pill p">${esc(p)}</span>`).join('')}${w.venue?`<span class="pill v">${esc(w.venue.name)}</span>`:''}</div></div>`;
+    });
+    html+='</div></div>';
+  });
+  $('#timeline').innerHTML=html;
+})();
+
+/* GESCHMACK */
+function animCharts(){
+  $$('#c-country .fill').forEach(f=>f.style.width=f.dataset.w+'%');
+  $$('#c-region .fill').forEach(f=>f.style.width=f.dataset.w+'%');
+  $$('#c-rating .bb').forEach(b=>b.style.height=b.dataset.h+'%');
+  const fp=$('#fp-poly');if(fp)fp.style.opacity=1;
+}
+(function(){
+  const top=S.byCountry.slice(0,9),mx=top[0].count;
+  $('#c-country').innerHTML=top.map(c=>`<div class="bar"><span class="nm">${esc(c.countryDe)}</span>
+    <div class="track"><div class="fill" data-w="${(c.count/mx*100).toFixed(1)}"></div></div>
+    <span class="vv">${c.count} ${c.avg?`<small>· ${c.avg.toFixed(1)}★</small>`:''}</span></div>`).join('');
+})();
+(function(){
+  const top=S.byRegion.slice(0,12),mx=top[0].count;
+  $('#c-region').innerHTML=top.map(r=>`<div class="bar"><span class="nm" title="${esc(r.region)}">${esc(r.region.length>16?r.region.slice(0,15)+'…':r.region)}</span>
+    <div class="track"><div class="fill" data-w="${(r.count/mx*100).toFixed(1)}"></div></div>
+    <span class="vv">${r.count} ${r.avg?`<small>· ${r.avg.toFixed(1)}★</small>`:''}</span></div>`).join('');
+})();
+(function(){
+  const T={'Red Wine':['Rotwein','#B0414F'],'White Wine':['Weißwein','#E8D5B0'],'Rosé Wine':['Rosé','#D98C8C'],'Sparkling':['Schaumwein','#C4A882'],'Unknown':['Unbekannt','#5a5550']};
+  const tot=S.byType.reduce((a,b)=>a+b.count,0);let off=0;const R=70,C=2*Math.PI*R;
+  let arcs='',leg='';
+  S.byType.forEach(t=>{const[nm,col]=T[t.type]||[t.type,'#888'];const frac=t.count/tot;const len=frac*C;
+    arcs+=`<circle cx="90" cy="90" r="${R}" fill="none" stroke="${col}" stroke-width="22" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 90 90)" opacity=".92"/>`;
+    off+=len;leg+=`<div class="li"><span class="sw" style="background:${col}"></span><b>${nm}</b> · ${t.count} · ${(frac*100).toFixed(0)}%</div>`;});
+  $('#c-donut').innerHTML=`<svg width="180" height="180" viewBox="0 0 180 180">${arcs}<text x="90" y="84" text-anchor="middle" fill="#E8D5B0" font-family="Cormorant Garamond" font-size="34" font-style="italic">${tot}</text><text x="90" y="104" text-anchor="middle" fill="rgba(245,242,236,.4)" font-family="DM Mono" font-size="9" letter-spacing="2">FLASCHEN</text></svg>`;
+  $('#c-donut-leg').innerHTML=leg;
+})();
+(function(){
+  const all=[2,2.5,3,3.5,4,4.5,5];const m={};S.ratingDist.forEach(r=>m[r.rating]=r.count);const mx=Math.max(...S.ratingDist.map(r=>r.count));
+  $('#c-rating').innerHTML=all.map(r=>{const n=m[r]||0;return `<div class="col"><span class="rn">${n||''}</span><div class="bb" data-h="${n/mx*100}"></div><span class="rl">${r}★</span></div>`;}).join('');
+})();
+(function(){
+  const fp=S.fingerprint,N=fp.length,cx=140,cy=140,R=104;const mx=Math.max(...fp.map(f=>f.value));
+  const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/N;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];};
+  let grid='';[.25,.5,.75,1].forEach(g=>{let p=fp.map((_,i)=>pt(i,R*g).join(',')).join(' ');grid+=`<polygon points="${p}" fill="none" stroke="rgba(245,242,236,.08)" stroke-width="1"/>`;});
+  let axes='',labels='';fp.forEach((f,i)=>{const[x,y]=pt(i,R);axes+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(245,242,236,.08)"/>`;
+    const[lx,ly]=pt(i,R+20);labels+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,242,236,.55)" font-family="DM Mono" font-size="9.5" letter-spacing="1">${f.axis}</text><text x="${lx}" y="${ly+12}" text-anchor="middle" fill="#C4A882" font-family="DM Mono" font-size="9">${f.value}%</text>`;});
+  const poly=fp.map((f,i)=>pt(i,R*Math.min(f.value/mx,1)).join(',')).join(' ');
+  $('#c-finger').innerHTML=`<svg width="280" height="280" viewBox="0 0 280 280">${grid}${axes}
+    <polygon id="fp-poly" points="${poly}" fill="rgba(196,168,130,.22)" stroke="#C4A882" stroke-width="1.6" style="opacity:0;transition:opacity 1.4s var(--ease)"/>
+    ${fp.map((f,i)=>{const[x,y]=pt(i,R*Math.min(f.value/mx,1));return `<circle cx="${x}" cy="${y}" r="3" fill="#E8D5B0"/>`}).join('')}
+    ${labels}</svg>`;
+})();
+
+/* MENSCHEN */
+(function(){
+  const ppl=D.people;const f=ppl[0];
+  const fw=f.wineIds.map(i=>byId[i]).filter(Boolean).sort((a,b)=>(b.rating||0)-(a.rating||0));
+  $('#people-feat').innerHTML=`<div class="feat reveal"><div class="ava">${esc(f.name[0])}</div>
+    <div class="meta"><b>${esc(f.name)}</b><div class="ctx">${esc(f.context)}</div><div class="cnt">${f.count} Flaschen</div>
+    <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px">${fw.slice(0,8).map(w=>`<span class="pill p" style="cursor:pointer" onclick="openModal('${w.id}')">${esc(w.winery||w.name)}${w.rating?' '+stars(w.rating):''}</span>`).join('')}</div></div></div>`;
+  $('#people-grid').innerHTML=ppl.slice(1).map(p=>`<div class="pcard reveal" onclick="openPerson('${esc(p.name)}')">
+    <div class="ava">${esc(p.name[0])}</div><div class="nm">${esc(p.name)}</div><div class="ctx">${esc(p.context)}</div>
+    <div class="cnt">${p.count} Flasche${p.count>1?'n':''}</div></div>`).join('');
+})();
+function openPerson(name){
+  const p=D.people.find(x=>x.name===name);if(!p)return;
+  const ws=p.wineIds.map(i=>byId[i]).filter(Boolean).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  $('#m-lbl').innerHTML=`<div class="noimg">${esc(p.name[0])}</div>`;
+  $('#m-body').innerHTML=`<div class="reg">${esc(p.context)}</div><h3>${esc(p.name)}<small>${ws.length} gemeinsame Flasche${ws.length>1?'n':''}</small></h3>
+    <div style="margin-top:14px">${ws.map(w=>miniwine(w)).join('')}</div>`;
+  $('#modal').classList.add('open');
+}
+
+/* RECOS */
+(function(){
+  $('#reco-grid').innerHTML=D.recos.map(r=>{
+    const bc=r.tier==='Entdeckung'?'disc':r.tier==='Preis-Leistung'?'pl':'';
+    return `<div class="rcard reveal"><span class="badge ${bc}">${esc(r.tier)}</span>
+      <div class="reg">${esc(r.region)} · ${esc(r.countryDe)}</div>
+      <h4>${esc(r.winery)}<small>${esc(r.name)}</small></h4>
+      <div class="why">${esc(r.why)}</div>
+      ${r.anchors.length?`<div class="anchors">↳ weil dich begeisterte: ${r.anchors.map(esc).join(' · ')}</div>`:''}
+      <div class="row"><span class="grape">${esc(r.grape)}</span><span class="price">ab ~${r.price} €</span></div></div>`;
+  }).join('');
+  const sc=el=>el.map(c=>`<div class="scard" onclick="${c.link?`window.open('${c.link}','_blank')`:''}"><div class="reg">${esc(c.region||c.countryDe||'')}</div>
+    <h5>${esc(c.winery||c.name)}<small>${esc(c.name)}</small></h5><div class="av">${c.avg?'Community '+c.avg.toFixed(1)+'★':''}${c.vintage?' · '+c.vintage:''}</div></div>`).join('');
+  $('#cellar-strip').innerHTML=sc(D.cellar);
+  $('#wish-strip').innerHTML=sc(D.wishlist);
+})();
+
+/* MODAL */
+function openModal(id){
+  const w=byId[id];if(!w)return;
+  $('#m-lbl').innerHTML=w.label?`<img src="${w.label}" alt="" onerror="this.parentNode.innerHTML='<div class=noimg>${esc((w.winery||w.name)[0])}</div>'">`:`<div class="noimg">${esc((w.winery||w.name)[0])}</div>`;
+  const kvs=[w.vintage&&`Jahrgang ${w.vintage}`,w.type&&({'Red Wine':'Rotwein','White Wine':'Weißwein','Rosé Wine':'Rosé','Sparkling':'Schaumwein'}[w.type]||w.type),
+    w.price&&`${w.price} €`,w.avg&&`Community ${w.avg}★`].filter(Boolean);
+  $('#m-body').innerHTML=`<div class="reg">${esc(w.region||'')} ${w.countryDe?'· '+esc(w.countryDe):''}</div>
+    <h3>${esc(w.winery||w.name)}<small>${esc(w.name)}</small></h3>
+    ${w.rating?`<div class="stars" style="font-size:18px;margin-top:6px">${stars(w.rating)} <span style="color:var(--mu2);font-family:var(--mono);font-size:12px">dein Urteil</span></div>`:''}
+    <div class="kv">${kvs.map(k=>`<span class="pill">${esc(k)}</span>`).join('')}</div>
+    ${w.review?`<div class="qt">„${esc(w.review)}"</div>`:''}
+    ${w.note?`<div class="nt"><b style="color:var(--g);font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase">Notiz</b><br>${esc(w.note)}</div>`:''}
+    ${w.people.length?`<div class="nt" style="margin-top:12px"><b style="color:var(--g);font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase">Mit</b> ${w.people.map(esc).join(' · ')}</div>`:''}
+    ${w.venue?`<div class="nt" style="margin-top:6px"><b style="color:var(--teal);font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase">Ort</b> ${esc(w.venue.name)}${w.venue.city?' · '+esc(w.venue.city):''}</div>`:''}
+    ${w.date?`<div class="nt" style="margin-top:6px;color:var(--mu2)">${new Date(w.date).toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'})}</div>`:''}
+    ${w.link?`<a class="link" href="${w.link}" target="_blank">Auf Vivino ansehen →</a>`:''}`;
+  $('#modal').classList.add('open');
+}
+function closeModal(){$('#modal').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closePanel();}});
+</script>
+</body>
+</html>
