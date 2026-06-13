@@ -44,8 +44,8 @@ body{
 #introCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.85}
 .intro-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:36px;padding:24px;width:100%}
 .intro-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--g);opacity:0;animation:fade 1.4s ease .3s forwards}
-.sfboard{display:grid;gap:3px;width:min(760px,92vw);perspective:800px;padding:14px;background:rgba(8,6,5,.45);border:1px solid rgba(196,168,130,.12);border-radius:6px;box-shadow:0 40px 120px -40px rgba(0,0,0,.85),inset 0 1px 0 rgba(245,242,236,.04);opacity:0;animation:rise 1.3s var(--ease) .45s forwards}
-.flap{aspect-ratio:3/4.4;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#1a1a1a,#080808);border:1px solid rgba(196,168,130,.16);border-radius:2px;font-family:var(--mono);font-weight:500;color:var(--g-lite);font-size:clamp(7px,2.1vw,20px);line-height:1;box-shadow:inset 0 -2px 3px rgba(0,0,0,.6);position:relative;transform-style:preserve-3d;transition:background .25s,color .25s,border-color .25s}
+.sfboard{display:grid;gap:4px;width:min(1040px,95vw);perspective:800px;padding:14px;background:rgba(8,6,5,.45);border:1px solid rgba(196,168,130,.12);border-radius:6px;box-shadow:0 40px 120px -40px rgba(0,0,0,.85),inset 0 1px 0 rgba(245,242,236,.04);opacity:0;animation:rise 1.3s var(--ease) .45s forwards}
+.flap{aspect-ratio:3/4.4;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#1a1a1a,#080808);border:1px solid rgba(196,168,130,.16);border-radius:2px;font-family:var(--mono);font-weight:500;color:var(--g-lite);font-size:clamp(9px,2.7vw,28px);line-height:1;box-shadow:inset 0 -2px 3px rgba(0,0,0,.6);position:relative;transform-style:preserve-3d;transition:background .25s,color .25s,border-color .25s}
 .flap::after{content:"";position:absolute;left:1px;right:1px;top:50%;height:1px;background:rgba(0,0,0,.55);transform:translateY(-.5px)}
 .cta-enter{position:relative;overflow:hidden;background:rgba(196,168,130,.08);border:1px solid var(--g-deep);color:var(--g-lite);font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;padding:15px 30px;cursor:pointer;transition:transform .5s var(--ease),background .5s,border-color .5s,box-shadow .5s,color .5s;opacity:0;animation:rise 1.2s var(--ease) .9s forwards}
 .cta-enter:hover{background:var(--g);color:#15110c;border-color:var(--g);transform:translateY(-2px);box-shadow:0 16px 44px -14px rgba(196,168,130,.55)}
@@ -373,7 +373,14 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
 @media(max-width:760px){#gallery{padding:0;align-items:flex-end}#gallery .gbox{max-height:94vh;padding:22px}.ghead h3{font-size:28px}.lbnav{width:40px;height:40px}}
 
 /* ---------- TRESOR / Code-Schloss ---------- */
-.vault{display:flex;flex-direction:column;align-items:center;gap:18px;opacity:0;animation:rise 1.2s var(--ease) .9s forwards;padding:22px;background:rgba(8,6,5,.5);border:1px solid rgba(196,168,130,.14);border-radius:8px;box-shadow:0 30px 90px -40px rgba(0,0,0,.8),inset 0 1px 0 rgba(245,242,236,.04)}
+.vault{display:flex;flex-direction:column;align-items:center;gap:18px;opacity:0;transform:scale(.94);padding:22px;background:rgba(8,6,5,.5);border:1px solid rgba(196,168,130,.14);border-radius:8px;box-shadow:0 30px 90px -40px rgba(0,0,0,.8),inset 0 1px 0 rgba(245,242,236,.04)}
+.vault[hidden]{display:none}
+.vault.show{animation:vaultIn .85s var(--ease) forwards}
+@keyframes vaultIn{0%{opacity:0;transform:scale(.9) translateY(16px);filter:blur(9px)}100%{opacity:1;transform:none;filter:blur(0)}}
+.vault.show .vault-pad button{animation:keyIn .55s var(--ease) both}
+.vault.show .vault-display i{animation:keyIn .5s var(--ease) both}
+@keyframes keyIn{0%{opacity:0;transform:translateY(16px) scale(.82)}100%{opacity:1;transform:none}}
+#loginBtn{margin-top:6px}
 .vault-label{font-family:var(--mono);font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--mu2)}
 .vault-display{display:flex;gap:15px}
 .vault-display i{width:13px;height:13px;border-radius:50%;border:1px solid var(--g-deep);background:transparent;transition:all .3s}
@@ -429,7 +436,7 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
 
 /* ===================== NEUE MODULE (Block 2) ===================== */
 /* --- Sound-Button --- */
-#soundBtn{position:fixed;top:24px;right:84px;z-index:45;width:44px;height:44px;border-radius:50%;background:rgba(14,11,9,.7);backdrop-filter:blur(14px);border:1px solid var(--line);color:var(--mu2);font-size:17px;cursor:pointer;transition:all .4s;display:flex;align-items:center;justify-content:center}
+#soundBtn{position:fixed;left:24px;bottom:28px;z-index:45;width:44px;height:44px;border-radius:50%;background:rgba(14,11,9,.7);backdrop-filter:blur(14px);border:1px solid var(--line);color:var(--mu2);font-size:17px;cursor:pointer;transition:all .4s;display:flex;align-items:center;justify-content:center}
 #soundBtn:hover{border-color:var(--g);color:var(--g);transform:scale(1.06)}
 #soundBtn.on{color:var(--g-lite);border-color:var(--g-deep);box-shadow:0 0 18px -4px rgba(196,168,130,.5)}
 #soundBtn.on::after{content:"";position:absolute;top:7px;right:8px;width:5px;height:5px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:pulse 2.2s infinite}
@@ -543,7 +550,7 @@ nav::-webkit-scrollbar{display:none}
 .lp-item .cn{font-family:var(--mono);font-size:11px;color:var(--g-lite)}
 
 @media(max-width:760px){
-  #soundBtn{top:14px;right:62px;width:40px;height:40px;font-size:15px}
+  #soundBtn{left:14px;bottom:64px;width:40px;height:40px;font-size:15px}
   .cam-draft{grid-template-columns:1fr}
   .cam-draft .ph{max-width:200px}
   .mrow{grid-template-columns:24px 1fr auto;gap:10px}.mrow .vl{display:none}
@@ -561,7 +568,8 @@ nav::-webkit-scrollbar{display:none}
   <div class="intro-inner">
     <div class="intro-eyebrow">Marcus Braun · Privater Weinkeller</div>
     <div id="sfboard" class="sfboard"></div>
-    <div class="vault liquid">
+    <button id="loginBtn" class="cta-enter" onclick="revealVault()">Login Weinkeller <span>→</span></button>
+    <div class="vault liquid" id="vault" hidden>
       <div class="vault-label">Zugangscode · Weinkeller</div>
       <div class="vault-display" id="vDisplay"><i></i><i></i><i></i><i></i></div>
       <div class="vault-pad" id="vPad"></div>
@@ -841,7 +849,7 @@ function copyRatings(){const t=buildExportText();const ok=()=>{$('#ehint').textC
 /* ===================== KELLER-TOR · Split-Flap + Orbit + Liquid ===================== */
 const FLAP_CHARS=" ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#&-+/.:";
 const SF_ROWS=5,SF_COLS=20;
-const SF_MESSAGES=["MARCUS BRAUN\nWEINKELLER","464 WEINE\n144 LAGEN\n9 JAHRE","SUDTIROL BAROLO\nETNA BORDEAUX\nRIOJA DOURO","JEDE FLASCHE\nEIN ORT EIN MOMENT\nEIN MENSCH","WILLKOMMEN IM\nWEINGEHIRN"];
+const SF_MESSAGES=["MARCUS BRAUN\nWEINKELLER",(D.stats.totalWines+" WEINE\n"+((D.lagen&&D.lagen.length)||0)+" LAGEN\n"+(new Date().getFullYear()-(parseInt(D.owner.since)||2017))+" JAHRE"),"SUDTIROL BAROLO\nETNA BORDEAUX\nRIOJA DOURO","JEDE FLASCHE\nEIN ORT EIN MOMENT\nEIN MENSCH","WILLKOMMEN IM\nWEINGEHIRN"];
 let sfCells=[],sfTimers=[],sfIdx=0,sfInterval=null;
 function sfBuild(){const b=$('#sfboard');if(!b)return;b.style.gridTemplateColumns='repeat('+SF_COLS+',1fr)';for(let i=0;i<SF_ROWS*SF_COLS;i++){const c=document.createElement('div');c.className='flap';c.textContent=' ';b.appendChild(c);sfCells.push(c);}}
 function sfLayout(msg){const g=Array(SF_ROWS*SF_COLS).fill(' ');const lines=msg.split('\n').slice(0,SF_ROWS);const sr=Math.max(0,Math.floor((SF_ROWS-lines.length)/2));lines.forEach((ln,li)=>{const r=sr+li;if(r>=SF_ROWS)return;ln=ln.toUpperCase().slice(0,SF_COLS);const sc=Math.max(0,Math.floor((SF_COLS-ln.length)/2));for(let k=0;k<ln.length;k++)g[r*SF_COLS+sc+k]=FLAP_CHARS.indexOf(ln[k])>=0?ln[k]:' ';});return g;}
@@ -864,16 +872,17 @@ function enterApp(){const intro=$('#intro');if(!intro)return;intro.classList.add
 const LIQUID_SEL='.hl,.tlcard,.rcard,.pcard,.scard,.stat,#nav button,.cta-enter,.sitem';
 document.addEventListener('pointermove',e=>{const el=e.target.closest&&e.target.closest(LIQUID_SEL);if(!el)return;const r=el.getBoundingClientRect();el.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');el.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');},{passive:true});
 let vaultCode='';
-function buildVault(){const pad=$('#vPad');if(!pad)return;const keys=['1','2','3','4','5','6','7','8','9','⌫','0','✓'];pad.innerHTML=keys.map(k=>'<button data-k="'+k+'">'+k+'</button>').join('');pad.querySelectorAll('button').forEach(b=>b.onclick=()=>vaultKey(b.dataset.k));}
-function vaultKey(k){if(k==='⌫')vaultCode=vaultCode.slice(0,-1);else if(k==='✓'){checkVault();return;}else if(vaultCode.length<4)vaultCode+=k;updateVault();if(vaultCode.length===4)setTimeout(checkVault,200);}
+function buildVault(){const pad=$('#vPad');if(!pad)return;const keys=['1','2','3','4','5','6','7','8','9','⌫','0','✓'];pad.innerHTML=keys.map((k,i)=>'<button data-k="'+k+'" style="animation-delay:'+(i*0.04).toFixed(2)+'s">'+k+'</button>').join('');pad.querySelectorAll('button').forEach(b=>b.onclick=()=>vaultKey(b.dataset.k));}
+function vaultKey(k){const vv=$('#vault');if(vv&&vv.hidden)return;playClack(k==='✓'?680:(k==='⌫'?300:460),0.11,0.05);if(k==='⌫')vaultCode=vaultCode.slice(0,-1);else if(k==='✓'){checkVault();return;}else if(vaultCode.length<4)vaultCode+=k;updateVault();if(vaultCode.length===4)setTimeout(checkVault,200);}
 function updateVault(){const d=$('#vDisplay');if(!d)return;d.classList.remove('err');[...d.children].forEach((i,n)=>i.classList.toggle('on',n<vaultCode.length));}
 function checkVault(){const d=$('#vDisplay'),h=$('#vHint');if(vaultCode==='1483'){if(h){h.textContent='Willkommen';h.className='vault-hint ok';}const v=document.querySelector('.vault');if(v)v.classList.add('unlock');setTimeout(enterApp,820);}else{if(d)d.classList.add('shake','err');if(h){h.textContent='Falscher Code';h.className='vault-hint bad';}setTimeout(()=>{vaultCode='';if(d)d.classList.remove('shake','err');updateVault();if(h){h.textContent='Code eingeben';h.className='vault-hint';}},700);}}
 window.addEventListener('load',()=>{sfStart();startOrbit();buildVault();updateExportBadge();});
 document.addEventListener('keydown',e=>{const it=$('#intro');if(!it||it.classList.contains('gone'))return;if(/^[0-9]$/.test(e.key))vaultKey(e.key);else if(e.key==='Backspace')vaultKey('⌫');else if(e.key==='Enter')vaultKey('✓');});
 
 const VIEWS=[
-  ['home','◈','Übersicht'],['globe','✦','Welt'],['lagen','◭','Lagen'],['time','❧','Reise'],
-  ['taste','◉','Geschmack'],['people','⚭','Menschen'],['reco','✷','Empfehlungen']
+  ['home','◈','Übersicht'],['globe','✦','Welt'],['lagen','◭','Lagen'],['gallery','▦','Galerie'],
+  ['tiers','❖','Tiers'],['time','❧','Reise'],['taste','◉','Geschmack'],['people','⚭','Menschen'],
+  ['reco','✷','Empfehlungen'],['money','€','Weingeld'],['camera','◎','Kamera']
 ];
 const nav=$('#nav');
 VIEWS.forEach(([id,ic,tx])=>{
@@ -891,6 +900,11 @@ function go(id){
   if(id==='globe'){initGlobe();setTimeout(sizeGlobe,80);}
   if(id==='lagen'){initLagen();setTimeout(sizeLagen,80);}
   if(id==='taste')setTimeout(animCharts,260);
+  if(id==='gallery')renderGallery();
+  if(id==='tiers')renderTiers();
+  if(id==='money')renderMoney();
+  if(id==='camera')renderCaptures();
+  if(typeof uiClick==='function')uiClick();
 }
 function revealScan(root){
   $$('.reveal',root).forEach((el,i)=>{el.classList.remove('in');setTimeout(()=>el.classList.add('in'),90+i*120);});
@@ -1233,15 +1247,10 @@ function runSearch(q){
 }
 
 /* ===================== LAGEN · 3D TOPOGRAFIE ===================== */
-const LAGEN=[
- {key:'Südtirol - Alto Adige',label:'Südtirol',profile:'terrace',col:0x6FA68F,alt:'200–1000 m',soil:'Porphyr · Dolomit · Moräne',expo:'Steile S/SW-Hänge',grape:'Lagrein · Vernatsch · Pinot'},
- {key:'Barolo',label:'Barolo · Langhe',profile:'hills',col:0xC4A882,alt:'200–540 m',soil:'Tortonischer Mergel',expo:'Sorì — Südhänge',grape:'Nebbiolo'},
- {key:'Etna',label:'Etna',profile:'volcano',col:0xB0414F,alt:'400–1000 m',soil:'Vulkanasche · Lava',expo:'Contrade rund um den Vulkan',grape:'Nerello Mascalese'},
- {key:'Mosel',label:'Mosel',profile:'cliff',col:0x7a9b95,alt:'100–350 m',soil:'Devon-Schiefer',expo:'Extrem-Steillage bis 60°',grape:'Riesling'},
- {key:'Bolgheri',label:'Bolgheri',profile:'coast',col:0xD98C8C,alt:'0–150 m',soil:'Schwemmland · Kies',expo:'Sanfte Küstenhügel',grape:'Cabernet · Merlot'},
- {key:'Douro',label:'Douro',profile:'terrace',col:0xE8D5B0,alt:'100–600 m',soil:'Schiefer (Xisto)',expo:'Terrassen am Fluss',grape:'Touriga Nacional'},
- {key:'Rioja',label:'Rioja',profile:'hills',col:0xA8854E,alt:'300–700 m',soil:'Kalk-Lehm · Ton',expo:'Hochebene',grape:'Tempranillo'}
-];
+const LAGEN=(D.lagen||[]);
+const LAGEN_BY_KEY={};LAGEN.forEach(l=>{LAGEN_BY_KEY[l.key]=l;});
+const LAGEN_CURATED=['Südtirol - Alto Adige','Barolo','Etna','Mosel','Bolgheri','Douro','Rioja','Toscana','Barbaresco'].filter(k=>LAGEN_BY_KEY[k]);
+const LAGEN_DEFAULT=LAGEN_BY_KEY['Südtirol - Alto Adige']||LAGEN[0];
 let T={ready:false,GN:72,SIZE:200,AMP:58,spin:true,explode:0,explodeT:0,rotX:-0.5,rotY:0.35,drag:false,px:0,py:0,contours:[],markers:[],cur:null};
 function heightFn(profile){
   const noise=(u,v)=>0.5+0.28*Math.sin(u*23.1+v*17.7)+0.16*Math.sin(u*51-v*40)+0.09*Math.sin(u*9+v*80);
@@ -1273,7 +1282,7 @@ function initLagen(){
   el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();T.mouse.x=((e.clientX-r.left)/r.width)*2-1;T.mouse.y=-((e.clientY-r.top)/r.height)*2+1;
     if(T.drag){T.moved+=Math.abs(e.clientX-T.px)+Math.abs(e.clientY-T.py);T.rotY+=(e.clientX-T.px)*.006;T.rotX+=(e.clientY-T.py)*.004;T.rotX=Math.max(-1.2,Math.min(0.25,T.rotX));T.px=e.clientX;T.py=e.clientY;}});
   el.addEventListener('click',()=>{if(T.moved>6)return;T.ray.setFromCamera(T.mouse,T.cam);const hit=T.ray.intersectObjects(T.markers,false)[0];if(hit)openModal(hit.object.userData.id);});
-  buildChips();buildTerrain(LAGEN[0]);animLagen();
+  buildChips();buildTerrain(LAGEN_DEFAULT);animLagen();
 }
 function sizeLagen(){if(T.rend){const el=$('#terrain');T.cam.aspect=el.clientWidth/el.clientHeight;T.cam.updateProjectionMatrix();T.rend.setSize(el.clientWidth,el.clientHeight);}}
 window.addEventListener('resize',()=>{if(cur==='lagen')sizeLagen();});
@@ -1323,8 +1332,32 @@ function addMarkers(region,H){
     const st=new THREE.BufferGeometry();st.setAttribute('position',new THREE.Float32BufferAttribute([x,y,z,x,y+5,z],3));
     T.group.add(new THREE.Line(st,new THREE.LineBasicMaterial({color:0xC4A882,transparent:true,opacity:.4})));});
 }
-function buildChips(){$('#lagen-chips').innerHTML=LAGEN.map(l=>`<button data-k="${esc(l.key)}" onclick="selectLagen('${esc(l.key)}')">${esc(l.label)}</button>`).join('');}
-function selectLagen(k){const r=LAGEN.find(l=>l.key===k);if(r)buildTerrain(r);}
+function buildChips(){
+  const chips=LAGEN_CURATED.map(k=>{const l=LAGEN_BY_KEY[k];return `<button data-k="${esc(l.key)}">${esc(l.label)}</button>`;}).join('');
+  const c=$('#lagen-chips');if(!c)return;
+  c.innerHTML=chips+`<button class="lp-open" style="border-color:var(--g-deep);color:var(--g-lite)">▾ Alle ${LAGEN.length} Lagen</button>`;
+  $$('#lagen-chips button[data-k]').forEach(b=>{b.onclick=()=>selectLagen(b.dataset.k);b.classList.toggle('on',T.cur&&b.dataset.k===T.cur.key);});
+  const op=c.querySelector('.lp-open');if(op)op.onclick=openLagenPicker;
+}
+function selectLagen(k){const r=LAGEN_BY_KEY[k];if(r){buildTerrain(r);buildChips();}}
+function openLagenPicker(){const p=$('#lagenPicker');if(!p)return;p.classList.add('open');renderLagenPicker(($('#lpSearch')||{}).value||'');setTimeout(()=>{const s=$('#lpSearch');if(s)s.focus();},120);}
+function closeLagenPicker(){const p=$('#lagenPicker');if(p)p.classList.remove('open');}
+function renderLagenPicker(q){
+  q=(q||'').trim().toLowerCase();
+  const hit=LAGEN.map((l,i)=>({l,i})).filter(({l})=>!q||l.label.toLowerCase().includes(q)||(l.key||'').toLowerCase().includes(q)||(l.countryDe||'').toLowerCase().includes(q)||(l.grape||'').toLowerCase().includes(q));
+  const groups={};hit.forEach(({l,i})=>{(groups[l.countryDe||'—']=groups[l.countryDe||'—']||[]).push({l,i});});
+  const order=Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length);
+  let html='';
+  order.forEach(c=>{
+    html+=`<div class="lp-group">${esc(c)} · ${groups[c].length}</div>`;
+    groups[c].forEach(({l,i})=>{
+      const on=T.cur&&T.cur.key===l.key;
+      html+=`<div class="lp-item${on?' on':''}" data-i="${i}"><span class="sw" style="background:#${(l.col||0xC4A882).toString(16).padStart(6,'0')}"></span><span class="nm">${esc(l.label)}<small>${esc(l.profileLabel||l.profile||'')}${l.avg?' · Ø '+(+l.avg).toFixed(1)+'★':''}</small></span><span class="cn">${l.count}</span></div>`;
+    });
+  });
+  const el=$('#lpList');if(!el)return;el.innerHTML=html||'<div class="tier-empty">Keine Region gefunden.</div>';
+  $$('#lpList .lp-item').forEach(it=>it.onclick=()=>{const l=LAGEN[+it.dataset.i];if(l){selectLagen(l.key);closeLagenPicker();}});
+}
 function toggleExplode(b){T.explode=T.explode?0:1;b.classList.toggle('on',!!T.explode);}
 function toggleSpin(b){T.spin=!T.spin;b.classList.toggle('on',T.spin);}
 function animLagen(){
@@ -1390,8 +1423,196 @@ function openPhoto(i){if(!PHOTOSET.length)return;PHOTOI=i;$('#lbimg').src=PHOTOS
 function lbNav(d){if(!PHOTOSET.length)return;PHOTOI=(PHOTOI+d+PHOTOSET.length)%PHOTOSET.length;$('#lbimg').src=PHOTOSET[PHOTOI];}
 function closeLightbox(){$('#lightbox').classList.remove('open');}
 
+/* ===================== AMBIENT SOUND (WebAudio · prozedural, offline) ===================== */
+const SKEY='wg_sound_v1';
+let AC=null,sndOn=false,sndNodes=null;
+function ensureAC(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}return AC;}
+function playClack(freq,dur,vol){const ac=ensureAC();if(!ac)return;try{if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=freq||440;o.connect(g);g.connect(ac.destination);const t=ac.currentTime,d=dur||0.12;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||0.05,t+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.start(t);o.stop(t+d+0.02);}catch(e){}}
+function buildAmbient(){
+  if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();
+  const master=AC.createGain();master.gain.value=0;master.connect(AC.destination);
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=520;lp.Q.value=0.6;lp.connect(master);
+  [110,110.4,164.8].forEach((f,i)=>{const o=AC.createOscillator();o.type=i<2?'sine':'triangle';o.frequency.value=f;
+    const g=AC.createGain();g.gain.value=i<2?0.5:0.18;o.connect(g);g.connect(lp);o.start();});
+  const lfo=AC.createOscillator();lfo.frequency.value=0.07;const lg=AC.createGain();lg.gain.value=180;lfo.connect(lg);lg.connect(lp.frequency);lfo.start();
+  const bufN=AC.sampleRate*2,buf=AC.createBuffer(1,bufN,AC.sampleRate),chd=buf.getChannelData(0);
+  for(let i=0;i<bufN;i++)chd[i]=(Math.random()*2-1)*0.06;
+  const noise=AC.createBufferSource();noise.buffer=buf;noise.loop=true;
+  const nf=AC.createBiquadFilter();nf.type='bandpass';nf.frequency.value=420;nf.Q.value=0.5;
+  const ng=AC.createGain();ng.gain.value=0.5;noise.connect(nf);nf.connect(ng);ng.connect(master);noise.start();
+  return {master};
+}
+function fadeMaster(to,sec){if(!sndNodes||!AC)return;const g=sndNodes.master.gain,now=AC.currentTime;g.cancelScheduledValues(now);g.setValueAtTime(g.value,now);g.linearRampToValueAtTime(to,now+sec);}
+function setSound(on){
+  sndOn=on;const b=$('#soundBtn');if(b){b.classList.toggle('on',on);b.textContent=on?'♫':'♪';}
+  try{localStorage.setItem(SKEY,on?'1':'0');}catch(e){}
+  if(on){try{if(!sndNodes)sndNodes=buildAmbient();if(AC.state==='suspended')AC.resume();fadeMaster(0.16,2.5);}catch(e){sndOn=false;if(b){b.classList.remove('on');b.textContent='♪';}}}
+  else{fadeMaster(0,0.8);}
+}
+function toggleSound(){setSound(!sndOn);}
+function uiClick(){
+  if(!sndOn||!AC)return;
+  try{const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=660;o.connect(g);g.connect(AC.destination);
+    const t=AC.currentTime;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.035,t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+0.18);o.start(t);o.stop(t+0.2);}catch(e){}
+}
+function primeSound(){const app=document.getElementById('app');if(!app||!app.classList.contains('on'))return;try{if(localStorage.getItem(SKEY)==='1'&&!sndOn)setSound(true);}catch(e){}document.removeEventListener('pointerdown',primeSound);}
+document.addEventListener('pointerdown',primeSound);
+function revealVault(){
+  const b=$('#loginBtn');if(b){b.style.transition='opacity .5s var(--ease),transform .5s var(--ease)';b.style.opacity='0';b.style.transform='translateY(10px)';setTimeout(()=>{b.style.display='none';},480);}
+  const v=$('#vault');if(v){v.hidden=false;void v.offsetWidth;v.classList.add('show');}
+  try{if(localStorage.getItem(SKEY)==='1')setSound(true);}catch(e){}
+  playClack(523,0.2,0.05);
+}
+
+/* ===================== KAMERA · Captures (localStorage · geraetelokal, nie hochgeladen) ===================== */
+const CKEY='wg_captures_v1';
+let camDraft=null;
+function loadCaptures(){try{return JSON.parse(localStorage.getItem(CKEY)||'[]')||[];}catch(e){return [];}}
+function saveCaptures(arr){try{localStorage.setItem(CKEY,JSON.stringify(arr));return true;}catch(e){alert('Gerätespeicher voll — bitte ältere Aufnahme löschen.');return false;}}
+function setDraft(k,v){if(camDraft)camDraft[k]=v;}
+function onCapture(ev){
+  const f=ev.target.files&&ev.target.files[0];if(!f)return;ev.target.value='';
+  const rd=new FileReader();
+  rd.onload=()=>{const img=new Image();
+    img.onload=()=>{const max=1100,sc=Math.min(1,max/Math.max(img.width,img.height));
+      const cw=Math.round(img.width*sc),chh=Math.round(img.height*sc);
+      const cv=document.createElement('canvas');cv.width=cw;cv.height=chh;cv.getContext('2d').drawImage(img,0,0,cw,chh);
+      let data;try{data=cv.toDataURL('image/jpeg',0.72);}catch(e){data=rd.result;}
+      camDraft={img:data,name:'',price:'',rating:0,note:''};renderDraft();window.scrollTo&&$('#cam-draft').scrollIntoView({behavior:'smooth',block:'center'});};
+    img.onerror=()=>{camDraft={img:rd.result,name:'',price:'',rating:0,note:''};renderDraft();};
+    img.src=rd.result;};
+  rd.readAsDataURL(f);uiClick();
+}
+function renderDraft(){
+  const el=$('#cam-draft');if(!el)return;
+  if(!camDraft){el.innerHTML='';return;}
+  el.innerHTML=`<div class="cam-draft">
+    <img class="ph" src="${camDraft.img}" alt="Aufnahme">
+    <div class="cam-fields">
+      <div class="fr"><label>Wein / Name</label><input type="text" value="${esc(camDraft.name)}" placeholder="z. B. Tignanello 2019" oninput="setDraft('name',this.value)"></div>
+      <div class="fr"><label>Preis (€)</label><input type="number" inputmode="decimal" min="0" step="0.5" value="${esc(String(camDraft.price))}" placeholder="z. B. 48" oninput="setDraft('price',this.value)"></div>
+      <div class="fr"><label>Dein Urteil</label><div class="cam-rate" id="cd-rate"></div></div>
+      <div class="fr"><label>Notiz</label><textarea placeholder="Wo, mit wem, wie war er?" oninput="setDraft('note',this.value)">${esc(camDraft.note)}</textarea></div>
+      <div class="cam-actions"><button class="cam-save" onclick="saveDraft()">Im Logbuch sichern</button><button class="cam-cancel" onclick="cancelDraft()">Verwerfen</button></div>
+    </div></div>`;
+  renderDraftStars();
+}
+function renderDraftStars(){const r=$('#cd-rate');if(!r||!camDraft)return;
+  r.innerHTML=[1,2,3,4,5].map(n=>`<span class="st${n<=camDraft.rating?' on':''}" data-n="${n}">★</span>`).join('');
+  $$('#cd-rate .st').forEach(s=>s.onclick=()=>{const n=+s.dataset.n;camDraft.rating=(camDraft.rating===n?n-0.5:(camDraft.rating===n-0.5?0:n));renderDraftStars();});
+}
+function cancelDraft(){camDraft=null;renderDraft();}
+function saveDraft(){
+  if(!camDraft)return;const arr=loadCaptures();
+  arr.unshift({id:'c'+Date.now(),img:camDraft.img,name:(camDraft.name||'').trim()||'Ohne Namen',
+    price:parseFloat((camDraft.price+'').replace(',','.'))||null,rating:camDraft.rating||null,
+    note:(camDraft.note||'').trim()||null,ts:Date.now()});
+  if(saveCaptures(arr)){camDraft=null;renderDraft();renderCaptures();uiClick();}
+}
+function deleteCapture(id){if(!confirm('Diese Aufnahme aus deinem Logbuch löschen?'))return;saveCaptures(loadCaptures().filter(c=>c.id!==id));renderCaptures();}
+function renderCaptures(){
+  const el=$('#cap-list');if(!el)return;const arr=loadCaptures();
+  if(!arr.length){el.innerHTML='<div class="cap-empty">Noch keine eigenen Aufnahmen. Fotografiere deine erste Flasche — sie erscheint hier und fließt ins Weingeld.</div>';return;}
+  el.innerHTML='<div class="eyebrow" style="margin-top:36px">Dein Logbuch · '+arr.length+' '+(arr.length===1?'Aufnahme':'Aufnahmen')+'</div><div class="cap-grid">'+arr.map(c=>`
+    <div class="cap-card">
+      <img src="${c.img}" alt="${esc(c.name)}" onclick="openCapturePhoto('${c.id}')">
+      <div class="bd">
+        <div class="nm">${esc(c.name)}</div>
+        <div class="mt"><span class="stars">${c.rating?stars(c.rating):''}</span><span class="pr">${c.price!=null?fmtEur(c.price):''}</span></div>
+        ${c.note?`<div class="nt">${esc(c.note)}</div>`:''}
+        <div class="dt">${new Date(c.ts).toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'})}</div>
+        <button class="del" onclick="deleteCapture('${c.id}')">Löschen</button>
+      </div></div>`).join('')+'</div>';
+}
+function openCapturePhoto(id){const c=loadCaptures().find(x=>x.id===id);if(!c)return;PHOTOSET=[c.img];PHOTOI=0;$('#lbimg').src=c.img;$('#lightbox').classList.add('open');}
+
+/* ===================== WEINGELD ===================== */
+const fmtEur=n=>(n==null||isNaN(n))?'—':Math.round(n).toLocaleString('de-DE')+' €';
+function renderMoney(){
+  const priced=D.wines.filter(w=>w.price);
+  const caps=loadCaptures(),capPriced=caps.filter(c=>c.price);
+  const archiveSpend=priced.reduce((a,w)=>a+w.price,0),capSpend=capPriced.reduce((a,c)=>a+c.price,0),total=archiveSpend+capSpend;
+  const allPrices=priced.map(w=>w.price).concat(capPriced.map(c=>c.price)).sort((a,b)=>a-b);
+  const avg=allPrices.length?total/allPrices.length:0,median=allPrices.length?allPrices[Math.floor(allPrices.length/2)]:0;
+  const cellarN=D.stats.cellar||0,cellarEst=avg*cellarN;
+  const ST=[[fmtEur(total),'erfasst gesamt'],[allPrices.length,'Flaschen mit Preis'],[fmtEur(avg),'Ø pro Flasche'],
+    [fmtEur(median),'Median'],[fmtEur(allPrices[allPrices.length-1]||0),'teuerste'],[cellarN,'im Keller']];
+  $('#money-stats').innerHTML=ST.map(([n,l])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+  const TYPE={'Red Wine':'Rotwein','White Wine':'Weißwein','Rosé Wine':'Rosé','Sparkling':'Schaumwein'};
+  const byType={};priced.forEach(w=>{const k=TYPE[w.type]||w.type||'Sonstige';(byType[k]=byType[k]||[]).push(w.price);});
+  barChart('#money-type',Object.entries(byType).map(([k,v])=>[k,v.reduce((a,b)=>a+b,0),v.length]).sort((a,b)=>b[1]-a[1]));
+  const byC={};priced.forEach(w=>{const k=w.countryDe||'—';(byC[k]=byC[k]||[]).push(w.price);});
+  barChart('#money-country',Object.entries(byC).map(([k,v])=>[k,v.reduce((a,b)=>a+b,0),v.length]).sort((a,b)=>b[1]-a[1]).slice(0,8));
+  const top=priced.slice().sort((a,b)=>b.price-a.price).slice(0,8);
+  $('#money-top').innerHTML=top.length?top.map((w,i)=>`<div class="mrow" onclick="openModal('${w.id}')"><span class="rk">${i+1}</span><span class="nm"><b>${esc(w.winery||w.name)}</b><small>${esc(w.name)} · ${esc(w.countryDe||'')}</small></span><span class="pr">${fmtEur(w.price)}</span><span class="vl">${w.rating?stars(w.rating):''}</span></div>`).join(''):'<div class="tier-empty">Noch keine Preise erfasst.</div>';
+  const val=priced.filter(w=>w.rating>=4).map(w=>({w,s:w.rating/w.price})).sort((a,b)=>b.s-a.s).slice(0,8);
+  $('#money-value').innerHTML=val.length?val.map(({w},i)=>`<div class="mrow" onclick="openModal('${w.id}')"><span class="rk">${i+1}</span><span class="nm"><b>${esc(w.winery||w.name)}</b><small>${esc(w.name)} · ${esc(w.countryDe||'')}</small></span><span class="pr">${fmtEur(w.price)}</span><span class="vl">${stars(w.rating)}</span></div>`).join(''):'<div class="tier-empty">Mehr bewertete Preise nötig.</div>';
+  $('#money-captures').innerHTML=capPriced.length?('<div class="mtop">'+capPriced.slice().sort((a,b)=>b.price-a.price).map((c,i)=>`<div class="mrow"><span class="rk">${i+1}</span><span class="nm"><b>${esc(c.name)}</b><small>${c.rating?stars(c.rating):'eigene Aufnahme'}</small></span><span class="pr">${fmtEur(c.price)}</span><span class="vl"></span></div>`).join('')+'</div>'):'<div class="tier-empty">Über die Kamera erfasste Preise erscheinen hier (Summe: '+fmtEur(capSpend)+').</div>';
+  $('#money-note').innerHTML=`Datenlage: <b>${allPrices.length}</b> von <b>${D.stats.totalWines}</b> Flaschen mit echtem Preis (Vivino-Export + deine Kamera-Notizen). Keller-Schätzwert bei Ø ${fmtEur(avg)}: rund <b>${fmtEur(cellarEst)}</b> für ${cellarN} Flaschen — grobe Näherung, kein erfasster Wert. Je mehr du per Kamera erfasst, desto schärfer wird Weingeld.`;
+}
+function barChart(sel,rows){
+  const el=$(sel);if(!el)return;if(!rows.length){el.innerHTML='<div class="tier-empty">Keine Daten.</div>';return;}
+  const mx=Math.max(...rows.map(r=>r[1]));
+  el.innerHTML=rows.map(([k,sum,n])=>`<div class="bar"><span class="nm">${esc(k)}</span><div class="track"><div class="fill" style="width:${(sum/mx*100).toFixed(1)}%"></div></div><span class="vv">${fmtEur(sum)} <small>· ${n}</small></span></div>`).join('');
+}
+
+/* ===================== GALERIE (Etiketten-Wand) ===================== */
+let galFilter='all';
+function galPredicate(w){
+  if(galFilter==='all')return true;
+  if(galFilter==='top')return w.rating>=4.5;
+  if(['Red Wine','White Wine','Rosé Wine','Sparkling'].includes(galFilter))return w.type===galFilter;
+  return w.countryDe===galFilter;
+}
+function renderGallery(){
+  const fe=$('#gv-filters');
+  if(fe&&!fe.dataset.built){
+    const topC=D.stats.byCountry.slice(0,5).map(c=>c.countryDe);
+    const filters=[['all','Alle'],['Red Wine','Rotwein'],['White Wine','Weißwein'],['Rosé Wine','Rosé'],['Sparkling','Schaumwein'],['top','5★ · verehrt']].concat(topC.map(c=>[c,c]));
+    fe.innerHTML=filters.map(([k,l])=>`<button data-k="${esc(k)}"${k===galFilter?' class="on"':''}>${esc(l)}</button>`).join('');
+    $$('#gv-filters button').forEach(b=>b.onclick=()=>{galFilter=b.dataset.k;$$('#gv-filters button').forEach(x=>x.classList.toggle('on',x===b));paintGallery();uiClick();});
+    fe.dataset.built='1';
+  }
+  paintGallery();
+}
+function paintGallery(){
+  const ws=D.wines.filter(w=>w.label&&galPredicate(w)).sort((a,b)=>(b.rating||0)-(a.rating||0)||(b.avg||0)-(a.avg||0));
+  $('#gv-count').textContent=ws.length+' Etiketten';
+  $('#gv-grid').innerHTML=ws.map(w=>`<div class="gv-cell" onclick="openModal('${w.id}')">
+    <img src="${esc(w.label)}" loading="lazy" alt="${esc(w.winery||w.name)}" onerror="var c=this.closest('.gv-cell');if(c)c.remove()">
+    ${w.rating?`<span class="rt">${(+w.rating).toFixed(w.rating%1?1:0)}★</span>`:''}
+    <div class="ov"><b>${esc(w.winery||w.name)}</b><small>${esc(w.region||w.countryDe||'')}</small></div></div>`).join('');
+}
+
+/* ===================== TIERS (Rangliste) ===================== */
+let tierMode='you';
+const TIER_DEF=[['S','Verehrung','#F0E0C2'],['A','Geliebt','#C4A882'],['B','Solide','#8B6E3A'],['C','Okay','#7a9b95'],['D','Schwach','#7B2D3A']];
+function tierOf(v){if(v==null)return null;if(v>=5)return 'S';if(v>=4.5)return 'A';if(v>=4)return 'B';if(v>=3.5)return 'C';return 'D';}
+function tierComm(v){if(v==null)return null;if(v>=4.5)return 'S';if(v>=4.2)return 'A';if(v>=4.0)return 'B';if(v>=3.7)return 'C';return 'D';}
+function renderTiers(){
+  const tg=$('#tier-toggle');
+  if(tg&&!tg.dataset.built){
+    tg.innerHTML=`<button data-m="you" class="on">Dein Urteil</button><button data-m="comm">Community</button>`;
+    $$('#tier-toggle button').forEach(b=>b.onclick=()=>{tierMode=b.dataset.m;$$('#tier-toggle button').forEach(x=>x.classList.toggle('on',x===b));paintTiers();uiClick();});
+    tg.dataset.built='1';
+  }
+  paintTiers();
+}
+function paintTiers(){
+  const you=tierMode==='you';
+  const ws=D.wines.filter(w=>you?w.rating!=null:w.avg!=null);
+  const bk={S:[],A:[],B:[],C:[],D:[]};
+  ws.forEach(w=>{const v=you?w.rating:w.avg,t=you?tierOf(v):tierComm(v);if(t)bk[t].push(w);});
+  Object.keys(bk).forEach(k=>bk[k].sort((a,b)=>((you?b.rating:b.avg)||0)-((you?a.rating:a.avg)||0)));
+  $('#tier-rows').innerHTML=TIER_DEF.map(([L,cl,col])=>{
+    const arr=bk[L];
+    const cells=arr.length?arr.map(w=>`<div class="tier-cell" onclick="openModal('${w.id}')">${w.label?`<img src="${esc(w.label)}" loading="lazy" onerror="this.style.visibility='hidden'">`:`<div style="width:58px;height:80px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line2);font-family:var(--serif);font-style:italic;color:var(--g-deep);font-size:26px">${esc((w.winery||w.name||'?')[0])}</div>`}<div class="nm">${esc(w.winery||w.name)}</div></div>`).join(''):'<div class="tier-empty">—</div>';
+    return `<div class="tier-row"><div class="tier-band" style="background:${col}22"><div class="L" style="color:${col}">${L}</div><div class="cl">${cl}</div><div class="cn">${arr.length}</div></div><div class="tier-strip">${cells}</div></div>`;
+  }).join('');
+}
+
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeModal();closePanel();closeSearch();closeGallery();closeLightbox();}
+  if(e.key==='Escape'){closeModal();closePanel();closeSearch();closeGallery();closeLightbox();closeLagenPicker();}
   if($('#lightbox').classList.contains('open')){if(e.key==='ArrowRight')lbNav(1);if(e.key==='ArrowLeft')lbNav(-1);}
   if((e.key==='/'||((e.metaKey||e.ctrlKey)&&e.key==='k'))&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();openSearch();}
 });
