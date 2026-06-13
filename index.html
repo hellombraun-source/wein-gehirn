@@ -33,6 +33,25 @@ body{
 .vignette{position:fixed;inset:0;z-index:55;pointer-events:none;
   background:radial-gradient(120% 100% at 50% 30%,transparent 45%,rgba(0,0,0,.55) 100%)}
 
+/* ---------- KELLER-TOR (Landing) ---------- */
+#intro{background:radial-gradient(circle at 50% 42%,#13242a 0%,#0c1518 55%,#070c0d 100%)}
+#introCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.85}
+.intro-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:36px;padding:24px;width:100%}
+.intro-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--g);opacity:0;animation:fade 1.4s ease .3s forwards}
+.sfboard{display:grid;gap:3px;width:min(760px,92vw);perspective:800px;padding:14px;background:rgba(8,6,5,.45);border:1px solid rgba(196,168,130,.12);border-radius:6px;box-shadow:0 40px 120px -40px rgba(0,0,0,.85),inset 0 1px 0 rgba(245,242,236,.04);opacity:0;animation:rise 1.3s var(--ease) .45s forwards}
+.flap{aspect-ratio:3/4.4;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#191309,#0b0805);border:1px solid rgba(196,168,130,.13);border-radius:2px;font-family:var(--mono);font-weight:500;color:var(--g-lite);font-size:clamp(7px,2.1vw,20px);line-height:1;box-shadow:inset 0 -2px 3px rgba(0,0,0,.6);position:relative;transform-style:preserve-3d}
+.flap::after{content:"";position:absolute;left:1px;right:1px;top:50%;height:1px;background:rgba(0,0,0,.55);transform:translateY(-.5px)}
+.cta-enter{position:relative;overflow:hidden;background:rgba(196,168,130,.08);border:1px solid var(--g-deep);color:var(--g-lite);font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;padding:15px 30px;cursor:pointer;transition:transform .5s var(--ease),background .5s,border-color .5s,box-shadow .5s,color .5s;opacity:0;animation:rise 1.2s var(--ease) .9s forwards}
+.cta-enter:hover{background:var(--g);color:#15110c;border-color:var(--g);transform:translateY(-2px);box-shadow:0 16px 44px -14px rgba(196,168,130,.55)}
+.cta-enter span{display:inline-block;margin-left:8px;transition:transform .4s}
+.cta-enter:hover span{transform:translateX(5px)}
+
+/* ---------- Liquid Hover (gold, cursorfolgend) ---------- */
+.hl,.tlcard,.rcard,.pcard,.scard,.stat,#nav button,.cta-enter,.sitem,.lagen-chips button{position:relative}
+.hl::before,.tlcard::before,.rcard::before,.pcard::before,.scard::before,.stat::before,.cta-enter::before,.sitem::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .45s var(--ease);background:radial-gradient(150px circle at var(--mx,50%) var(--my,50%),rgba(196,168,130,.22),transparent 60%);mix-blend-mode:screen;z-index:0}
+.hl:hover::before,.tlcard:hover::before,.rcard:hover::before,.pcard:hover::before,.scard:hover::before,.stat:hover::before,.cta-enter:hover::before,.sitem:hover::before{opacity:1}
+@media(prefers-reduced-motion:reduce){.sfboard,.cta-enter,.intro-eyebrow{animation:none;opacity:1}}
+
 #intro{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 1.1s var(--ease),visibility 1.1s}
 #intro.gone{opacity:0;visibility:hidden}
 .intro-mark{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(40px,8vw,108px);letter-spacing:.01em;line-height:1;
@@ -351,9 +370,12 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
 <div class="grain"></div><div class="vignette"></div>
 
 <div id="intro">
-  <div class="intro-mark">Wein-Gehirn</div>
-  <div class="intro-sub">Marcus Braun · Eine Karte des Geschmacks</div>
-  <div class="intro-bar"></div>
+  <canvas id="introCanvas"></canvas>
+  <div class="intro-inner">
+    <div class="intro-eyebrow">Marcus Braun · Privater Weinkeller</div>
+    <div id="sfboard" class="sfboard"></div>
+    <button class="cta-enter liquid" onclick="enterApp()">Keller betreten<span>→</span></button>
+  </div>
 </div>
 
 <div id="app">
@@ -521,10 +543,31 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const stars=n=>n?'★'.repeat(Math.floor(n))+(n%1?'½':''):'';
 
-window.addEventListener('load',()=>{
-  setTimeout(()=>{$('#intro').classList.add('gone');$('#app').classList.add('on');
-    $('#v-home').classList.add('active');revealScan($('#v-home'));},2600);
-});
+/* ===================== KELLER-TOR · Split-Flap + Orbit + Liquid ===================== */
+const FLAP_CHARS=" ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#&-+/.:";
+const SF_ROWS=5,SF_COLS=20;
+const SF_MESSAGES=["MARCUS BRAUN\nWEINKELLER","464 WEINE\n144 LAGEN\n9 JAHRE","SUDTIROL BAROLO\nETNA BORDEAUX\nRIOJA DOURO","JEDE FLASCHE\nEIN ORT EIN MOMENT\nEIN MENSCH","WILLKOMMEN IM\nWEINGEHIRN"];
+let sfCells=[],sfTimers=[],sfIdx=0,sfInterval=null;
+function sfBuild(){const b=$('#sfboard');if(!b)return;b.style.gridTemplateColumns='repeat('+SF_COLS+',1fr)';for(let i=0;i<SF_ROWS*SF_COLS;i++){const c=document.createElement('div');c.className='flap';c.textContent=' ';b.appendChild(c);sfCells.push(c);}}
+function sfLayout(msg){const g=Array(SF_ROWS*SF_COLS).fill(' ');const lines=msg.split('\n').slice(0,SF_ROWS);const sr=Math.max(0,Math.floor((SF_ROWS-lines.length)/2));lines.forEach((ln,li)=>{const r=sr+li;if(r>=SF_ROWS)return;ln=ln.toUpperCase().slice(0,SF_COLS);const sc=Math.max(0,Math.floor((SF_COLS-ln.length)/2));for(let k=0;k<ln.length;k++)g[r*SF_COLS+sc+k]=FLAP_CHARS.indexOf(ln[k])>=0?ln[k]:' ';});return g;}
+function sfFlip(cell,ch){cell.textContent=ch===' '?' ':ch;try{cell.animate([{transform:'rotateX(-78deg)',filter:'brightness(1.8)'},{transform:'rotateX(0)',filter:'brightness(1)'}],{duration:130,easing:'cubic-bezier(.3,1.1,.5,1)'});}catch(e){}}
+function sfShow(msg){sfTimers.forEach(clearTimeout);sfTimers=[];const tg=sfLayout(msg);sfCells.forEach((cell,idx)=>{const col=idx%SF_COLS,row=(idx/SF_COLS)|0,target=tg[idx];if(target===' '&&cell.textContent===' ')return;const steps=target===' '?6:14+((Math.random()*10)|0);let s=0;const run=()=>{s++;const last=s>=steps;const ch=last?target:FLAP_CHARS[1+((Math.random()*(FLAP_CHARS.length-1))|0)];sfFlip(cell,ch);if(!last)sfTimers.push(setTimeout(run,42));};sfTimers.push(setTimeout(run,col*22+row*30));});}
+function sfStart(){sfBuild();sfShow(SF_MESSAGES[0]);sfInterval=setInterval(()=>{sfIdx=(sfIdx+1)%SF_MESSAGES.length;sfShow(SF_MESSAGES[sfIdx]);},6000);}
+function startOrbit(){const cv=$('#introCanvas');if(!cv)return;const ctx=cv.getContext('2d');const dpr=Math.min(devicePixelRatio||1,2);
+  const size=()=>{cv.width=cv.clientWidth*dpr;cv.height=cv.clientHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);};size();
+  window.addEventListener('resize',()=>{const it=$('#intro');if(it&&!it.classList.contains('gone'))size();});
+  const N=44,nodes=[];for(let i=0;i<N;i++)nodes.push({a:Math.random()*6.283,r:50+Math.random()*Math.min(innerWidth,innerHeight)*0.42,sp:(0.0005+Math.random()*0.0011)*(Math.random()<.5?-1:1),sz:0.6+Math.random()*1.8});
+  const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function frame(){const w=cv.clientWidth,h=cv.clientHeight,cx=w/2,cy=h*0.46;ctx.clearRect(0,0,w,h);
+    const pts=nodes.map(n=>{if(!reduce)n.a+=n.sp;return{x:cx+Math.cos(n.a)*n.r,y:cy+Math.sin(n.a)*n.r*0.6,sz:n.sz};});
+    ctx.lineWidth=0.6;for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);if(d<118){ctx.strokeStyle='rgba(196,168,130,'+(0.11*(1-d/118)).toFixed(3)+')';ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}}
+    pts.forEach(p=>{ctx.beginPath();ctx.fillStyle='rgba(232,213,176,.5)';ctx.arc(p.x,p.y,p.sz,0,6.29);ctx.fill();});
+    const it=$('#intro');if(!reduce&&it&&!it.classList.contains('gone'))requestAnimationFrame(frame);}
+  frame();}
+function enterApp(){const intro=$('#intro');if(!intro)return;intro.classList.add('gone');$('#app').classList.add('on');$('#v-home').classList.add('active');revealScan($('#v-home'));if(typeof animCount==='function')animCount();if(sfInterval){clearInterval(sfInterval);sfInterval=null;}setTimeout(()=>{intro.style.display='none';},1300);}
+const LIQUID_SEL='.hl,.tlcard,.rcard,.pcard,.scard,.stat,#nav button,.cta-enter,.sitem';
+document.addEventListener('pointermove',e=>{const el=e.target.closest&&e.target.closest(LIQUID_SEL);if(!el)return;const r=el.getBoundingClientRect();el.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');el.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');},{passive:true});
+window.addEventListener('load',()=>{sfStart();startOrbit();});
 
 const VIEWS=[
   ['home','◈','Übersicht'],['globe','✦','Welt'],['lagen','◭','Lagen'],['time','❧','Reise'],
@@ -568,7 +611,7 @@ function animCount(){
     requestAnimationFrame(step);
   });
 }
-setTimeout(animCount,2850);
+/* Zähler starten beim Betreten (enterApp) */
 
 const topC=S.byCountry[0],topR=S.byRegion[0];
 const fav=D.wines.filter(w=>w.rating>=5).sort((a,b)=>(b.avg||0)-(a.avg||0));
