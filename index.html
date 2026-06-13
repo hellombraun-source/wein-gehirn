@@ -73,7 +73,8 @@ body{
 
 #app{position:relative;z-index:10;height:100%;opacity:0;transition:opacity 1s var(--ease) .1s}
 #app.on{opacity:1}
-.brand{position:fixed;top:26px;left:34px;z-index:40;display:flex;align-items:center;gap:13px;pointer-events:none}
+.brand{position:fixed;top:26px;left:34px;z-index:40;display:flex;align-items:center;gap:13px;pointer-events:auto;cursor:pointer;transition:transform .3s var(--ease)}
+.brand:hover{transform:translateY(-1px)}.brand b{transition:color .3s}.brand:hover b{color:var(--g)}.brand:hover .dot{box-shadow:0 0 16px var(--g)}
 .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--g);box-shadow:0 0 14px var(--g)}
 .brand b{font-family:var(--serif);font-style:italic;font-weight:400;font-size:21px;letter-spacing:.02em}
 .brand span{font-family:var(--mono);font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--mu2);margin-left:2px}
@@ -628,7 +629,7 @@ nav::-webkit-scrollbar{display:none}
 </div>
 
 <div id="app">
-  <div class="brand"><div class="dot"></div><b>Wein-Gehirn</b><span>MB</span></div>
+  <div class="brand" onclick="go('home')" title="Zur Startseite" role="button" aria-label="Zur Startseite"><div class="dot"></div><b>Wein-Gehirn</b><span>MB</span></div>
 
   <section class="view" id="v-home">
     <div class="wrap">
@@ -1445,14 +1446,14 @@ function buildTerrain(region){
 }
 function parseAltRange(s){const m=(s||'').match(/(\d+)\D+(\d+)/);return m?[+m[1],+m[2]]:[0,1000];}
 function makeContourLabel(text){
-  const sc=2,W=160,H=40;const cv=document.createElement('canvas');cv.width=W*sc;cv.height=H*sc;const c=cv.getContext('2d');c.scale(sc,sc);
-  c.font='600 21px "DM Mono",monospace';const tw=Math.min(W,c.measureText(text).width+20);
-  c.fillStyle='rgba(8,17,21,.78)';c.fillRect(0,5,tw,H-10);
-  c.strokeStyle='rgba(196,168,130,.6)';c.lineWidth=1;c.strokeRect(.5,5.5,tw-1,H-11);
-  c.fillStyle='#E8D5B0';c.textBaseline='middle';c.fillText(text,10,H/2);
+  const sc=2,W=120,H=34;const cv=document.createElement('canvas');cv.width=W*sc;cv.height=H*sc;const c=cv.getContext('2d');c.scale(sc,sc);
+  c.font='700 20px "DM Mono",monospace';c.textBaseline='middle';c.textAlign='left';
+  c.shadowColor='#2BFF9E';c.shadowBlur=12;c.fillStyle='#7CFFB4';
+  c.fillText(text,6,H/2);c.fillText(text,6,H/2);
+  c.shadowBlur=0;c.fillStyle='#D6FFEA';c.fillText(text,6,H/2);
   const tex=new THREE.CanvasTexture(cv);tex.minFilter=THREE.LinearFilter;tex.magFilter=THREE.LinearFilter;
   const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
-  sp.scale.set(W*0.27,H*0.27,1);sp.renderOrder=12;return sp;
+  sp.scale.set(W*0.25,H*0.25,1);sp.renderOrder=12;return sp;
 }
 function buildContours(Hg){
   const GN=T.GN,SIZE=T.SIZE,AMP=T.AMP,ths=[0.16,0.30,0.44,0.58,0.72,0.85];
