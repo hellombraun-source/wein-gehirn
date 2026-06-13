@@ -287,7 +287,21 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
 .glab img{width:86px;height:120px;object-fit:cover;border:1px solid var(--line2);background:#0a0807}
 .glab span{display:block;font-size:9px;color:var(--mu2);margin-top:5px;line-height:1.2}
 .glab:hover img{border-color:var(--g)}
-@media(max-width:760px){#gallery{padding:0;align-items:flex-end}#gallery .gbox{max-height:94vh;padding:22px}.ghead h3{font-size:28px}}
+.gpgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin-top:10px}
+.gpgrid img{width:100%;aspect-ratio:3/4;object-fit:cover;cursor:pointer;border:1px solid var(--line2);transition:border-color .3s,transform .3s}
+.gpgrid img:hover{border-color:var(--g);transform:scale(1.02)}
+.gmnote{font-family:var(--serif);font-style:italic;color:var(--g);font-size:15px;margin:2px 0 6px}
+#lightbox{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+#lightbox.open{opacity:1;visibility:visible}
+#lightbox .scrim{position:absolute;inset:0;background:rgba(3,2,2,.95)}
+#lightbox img{position:relative;z-index:2;max-width:92vw;max-height:88vh;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.lbx{position:absolute;top:18px;right:22px;z-index:3;background:none;border:none;color:var(--mu);font-size:26px;cursor:pointer}
+.lbx:hover{color:var(--g)}
+.lbnav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;background:rgba(14,11,9,.6);border:1px solid var(--line);color:var(--ink);width:46px;height:46px;font-size:24px;cursor:pointer;backdrop-filter:blur(8px)}
+.lbnav.prev{left:18px}.lbnav.next{right:18px}.lbnav:hover{border-color:var(--g);color:var(--g)}
+.momentbtn{margin-top:16px;background:rgba(196,168,130,.12);border:1px solid var(--g-deep);color:var(--g-lite);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:11px 16px;cursor:pointer;transition:all .4s}
+.momentbtn:hover{background:var(--g);color:#15110c;border-color:var(--g)}
+@media(max-width:760px){#gallery{padding:0;align-items:flex-end}#gallery .gbox{max-height:94vh;padding:22px}.ghead h3{font-size:28px}.lbnav{width:40px;height:40px}}
 
 /* MOBILE / iPhone */
 @media(max-width:760px){
@@ -447,6 +461,13 @@ nav .ic{display:block;font-size:15px;margin-bottom:3px;text-align:center}
       </div>
     </div>
   </section>
+</div>
+
+<div id="lightbox"><div class="scrim" onclick="closeLightbox()"></div>
+  <button class="lbx" onclick="closeLightbox()">✕</button>
+  <button class="lbnav prev" onclick="lbNav(-1)">‹</button>
+  <img id="lbimg" src="" alt="Foto vom Weintasting">
+  <button class="lbnav next" onclick="lbNav(1)">›</button>
 </div>
 
 <div id="gallery"><div class="scrim" onclick="closeGallery()"></div>
@@ -744,7 +765,8 @@ function animCharts(){
   const fw=f.wineIds.map(i=>byId[i]).filter(Boolean).sort((a,b)=>(b.rating||0)-(a.rating||0));
   $('#people-feat').innerHTML=`<div class="feat reveal"><div class="ava">${esc(f.name[0])}</div>
     <div class="meta"><b>${esc(f.name)}</b><div class="ctx">${esc(f.context)}</div><div class="cnt">${f.count} Flaschen</div>
-    <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px">${fw.slice(0,8).map(w=>`<span class="pill p" style="cursor:pointer" onclick="openModal('${w.id}')">${esc(w.winery||w.name)}${w.rating?' '+stars(w.rating):''}</span>`).join('')}</div></div></div>`;
+    <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px">${fw.slice(0,8).map(w=>`<span class="pill p" style="cursor:pointer" onclick="openModal('${w.id}')">${esc(w.winery||w.name)}${w.rating?' '+stars(w.rating):''}</span>`).join('')}</div>
+    <button class="momentbtn" onclick="openMoment('Südtirol - Alto Adige')">📷 Südtirol · Weinkeller-Weintasting mit dir</button></div></div>`;
   $('#people-grid').innerHTML=ppl.slice(1).map(p=>`<div class="pcard reveal" onclick="openPerson('${esc(p.name)}')">
     <div class="ava">${esc(p.name[0])}</div><div class="nm">${esc(p.name)}</div><div class="ctx">${esc(p.context)}</div>
     <div class="cnt">${p.count} Flasche${p.count>1?'n':''}</div></div>`).join('');
@@ -982,18 +1004,29 @@ function sceneSVG(r,vrt){
   let rows='';for(let y=234;y<296;y+=11)for(let x=14;x<W;x+=20)rows+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-6)+'" stroke="'+acc+'" stroke-width="1.3" opacity="'+(.2+(y-234)/90).toFixed(2)+'"/>';
   return '<svg viewBox="0 0 '+W+' '+Hgt+'" class="gscene"><defs><linearGradient id="sk'+r.profile+vrt+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+sky+'"/><stop offset="1" stop-color="#0a0807"/></linearGradient></defs><rect width="'+W+'" height="'+Hgt+'" fill="url(#sk'+r.profile+vrt+')"/><circle cx="'+(vrt===2?W-90:90)+'" cy="78" r="26" fill="'+acc+'" opacity=".75"/><path d="M0,168 '+ridge(W,168,24,vrt+1)+'L'+W+',300 L0,300 Z" fill="'+mid+'" opacity=".45"/><path d="'+slope+'" fill="'+reg+'" opacity=".5"/><path d="'+slope+'" fill="none" stroke="'+acc+'" stroke-width="1" opacity=".3"/>'+rows+'<text x="18" y="36" font-family="Cormorant Garamond" font-style="italic" font-size="26" fill="#F5F2EC" opacity=".92">'+esc(r.label)+'</text></svg>';
 }
+const MOMENTS={'Südtirol - Alto Adige':{title:'Weinkeller · Weintasting',sub:'Südtirol · mit Fischi',note:'Der Abend, an dem Olli gehen musste.',photos:['photos/p1.jpg','photos/p2.jpg','photos/p3.jpg','photos/p4.jpg','photos/p5.jpg','photos/p6.jpg']}};
+let PHOTOSET=[],PHOTOI=0;
+function openMoment(key){const r=LAGEN.find(l=>l.key===key)||LAGEN[0];T.cur=r;openGallery();}
 function openGallery(){
   if(!T.cur)T.cur=LAGEN[0];const r=T.cur;if(!r)return;
   $('#ghead').innerHTML='<div class="reg">'+esc(r.alt)+' · '+esc(r.soil)+'</div><h3>'+esc(r.label)+'</h3><p>'+esc(r.expo)+' · '+esc(r.grape)+'</p>';
-  $('#gscenes').innerHTML=[0,1,2].map(v=>sceneSVG(r,v)).join('');
+  const mom=MOMENTS[r.key];PHOTOSET=mom?mom.photos.slice():[];
+  let photoBlock='';
+  if(mom){photoBlock='<div style="grid-column:1/-1;display:none" id="gphotos"><div class="glab-h" style="margin-top:0">'+esc(mom.title)+' · '+esc(mom.sub)+'</div><div class="gmnote">„'+esc(mom.note)+'"</div><div class="gpgrid">'+mom.photos.map((p,i)=>'<img src="'+esc(p)+'" loading="lazy" onload="var g=document.getElementById(\'gphotos\');if(g)g.style.display=\'block\'" onerror="this.remove()" onclick="openPhoto('+i+')">').join('')+'</div></div>';}
+  $('#gscenes').innerHTML=photoBlock+[0,1,2].map(v=>sceneSVG(r,v)).join('');
   const ws=D.wines.filter(w=>w.region===r.key&&w.label).slice(0,14);
-  $('#glabels').innerHTML='<div class="gnote">Editorial-Illustrationen des Anbaugebiets (Topografie & Rebzeilen) — keine Fotos.</div>'+(ws.length?'<div class="glab-h">Deine Flaschen aus dieser Lage</div><div class="glab-strip">'+ws.map(w=>'<div class="glab" onclick="closeGallery();openModal(\''+w.id+'\')"><img src="'+w.label+'" loading="lazy" onerror="this.style.display=\'none\'"><span>'+esc(w.winery||w.name)+'</span></div>').join('')+'</div>':'');
+  $('#glabels').innerHTML='<div class="gnote">Szenen unten sind editorial illustriert (Topografie &amp; Rebzeilen)'+(mom?' · die Fotos oben sind echt':'')+'.</div>'+(ws.length?'<div class="glab-h">Deine Flaschen aus dieser Lage</div><div class="glab-strip">'+ws.map(w=>'<div class="glab" data-id="'+esc(String(w.id))+'"><img src="'+esc(w.label)+'" loading="lazy" onerror="this.style.display=\'none\'"><span>'+esc(w.winery||w.name)+'</span></div>').join('')+'</div>':'');
+  $$('#glabels .glab').forEach(el=>el.onclick=()=>{closeGallery();openModal(el.dataset.id);});
   $('#gallery').classList.add('open');
 }
 function closeGallery(){$('#gallery').classList.remove('open');}
+function openPhoto(i){if(!PHOTOSET.length)return;PHOTOI=i;$('#lbimg').src=PHOTOSET[i];$('#lightbox').classList.add('open');}
+function lbNav(d){if(!PHOTOSET.length)return;PHOTOI=(PHOTOI+d+PHOTOSET.length)%PHOTOSET.length;$('#lbimg').src=PHOTOSET[PHOTOI];}
+function closeLightbox(){$('#lightbox').classList.remove('open');}
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeModal();closePanel();closeSearch();closeGallery();}
+  if(e.key==='Escape'){closeModal();closePanel();closeSearch();closeGallery();closeLightbox();}
+  if($('#lightbox').classList.contains('open')){if(e.key==='ArrowRight')lbNav(1);if(e.key==='ArrowLeft')lbNav(-1);}
   if((e.key==='/'||((e.metaKey||e.ctrlKey)&&e.key==='k'))&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();openSearch();}
 });
 </script>
