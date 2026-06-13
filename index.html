@@ -1469,7 +1469,7 @@ function buildContours(Hg){
     if(!pos.length)return;
     const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
     const ln=new THREE.LineSegments(gg,new THREE.LineBasicMaterial({color:0xE8D5B0,transparent:true,opacity:.45}));ln.userData.th=th;T.group.add(ln);T.contours.push(ln);
-    const _ar=parseAltRange(T.cur&&T.cur.alt),_el=Math.round((_ar[0]+th*(_ar[1]-_ar[0]))/10)*10,_lab=makeContourLabel(_el+' m');_lab.position.set(-SIZE*0.5-18,th*AMP,-SIZE*0.5);_lab.userData.th=th;T.group.add(_lab);T.contourLabels.push(_lab);});
+    const _ar=parseAltRange(T.cur&&T.cur.alt),_el=Math.round((_ar[0]+th*(_ar[1]-_ar[0]))/10)*10,_lab=makeContourLabel(_el+' m');_lab.position.set(-SIZE*0.5-8,th*AMP,-SIZE*0.5);_lab.userData.th=th;T.group.add(_lab);T.contourLabels.push(_lab);});
 }
 function addMarkers(region,H){
   const SIZE=T.SIZE,AMP=T.AMP,frac=x=>x-Math.floor(x);
