@@ -846,12 +846,14 @@ const OCCDEF=[
 ];
 function occOf(w){const t=((w.note||'')+' '+(w.review||''));const o=[];OCCDEF.forEach(([rx,l,c])=>{if(rx.test(t))o.push({label:l,color:c});});return o;}
 let SI=null;
+const DAUGHTER_ALIAS='monkey tochter jahrgangswein';  // verstecktes Such-Codewort fuer die Tochter-Flasche (Name bleibt draussen)
 function buildIndex(){
   SI=D.wines.map(w=>{
     const occ=occOf(w).map(o=>o.label);
+    const daughter=occ.includes('Jahrgangswein');  // namensfrei: identifiziert die Flasche ohne den Namen im Quelltext
     const hay=[w.winery,w.name,w.region,w.countryDe,w.style,w.type,w.note,w.review,
-      (w.venue&&w.venue.name),(w.venue&&w.venue.city),(w.people||[]).join(' '),occ.join(' '),w.vintage]
-      .filter(Boolean).join(' ').toLowerCase();
+      (w.venue&&w.venue.name),(w.venue&&w.venue.city),(w.people||[]).join(' '),occ.join(' '),w.vintage,
+      daughter?DAUGHTER_ALIAS:''].filter(Boolean).join(' ').toLowerCase();
     return {w,hay,occ};
   });
 }
